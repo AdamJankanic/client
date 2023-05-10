@@ -35,7 +35,6 @@ import {
   RadioGroup,
   Tooltip,
 } from "@mui/material";
-import { makeStyles, ThemeProvider } from "@mui/styles";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -50,31 +49,31 @@ import {
   sendMessageToServer,
 } from "../websocket.js";
 
-const useStyles = makeStyles({
-  activeChannel: {
-    backgroundImage:
-      "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
-    boxShadow:
-      "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
-  },
-  nonActiveChannel: {
-    // backgroundImage:
-    //   "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
-    boxShadow:
-      "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+// const useStyles = makeStyles({
+//   activeChannel: {
+//     backgroundImage:
+//       "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
+//     boxShadow:
+//       "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+//   },
+//   nonActiveChannel: {
+//     // backgroundImage:
+//     //   "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
+//     boxShadow:
+//       "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
 
-    border: "10px solid ",
-    borderImage:
-      "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%) 1",
-    borderRadius: "15rem",
-  },
-});
+//     border: "10px solid ",
+//     borderImage:
+//       "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%) 1",
+//     borderRadius: "15rem",
+//   },
+// });
 
 export function Test() {
   const dispatch = useDispatch();
   const selector = useSelector((state) => state);
   const navigate = useNavigate();
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const active = selector.channelsStore.active;
 
@@ -319,8 +318,8 @@ export function Test() {
                   onClick={clickedChannel.bind(this, channel.uuid)}
                   className={
                     active === channel.uuid
-                      ? classes.activeChannel
-                      : classes.nonActiveChannel
+                    // ? classes.activeChannel
+                    // : classes.nonActiveChannel
                   }
                 >
                   <Channel

@@ -6,7 +6,6 @@ import ListItem from "@mui/material/ListItem";
 import PublicIcon from "@mui/icons-material/Public";
 import LockIcon from "@mui/icons-material/Lock";
 
-import { makeStyles } from "@mui/styles";
 import { useSelector } from "react-redux";
 
 export function Channel(props) {

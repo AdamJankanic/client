@@ -1,36 +1,35 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles({
-  sentMessageBox: {
-    float: "right",
-    width: "25%",
-    position: "relative",
-    // left: "50%",
-  },
+// const useStyles = makeStyles({
+//   sentMessageBox: {
+//     float: "right",
+//     width: "25%",
+//     position: "relative",
+//     // left: "50%",
+//   },
 
-  receivedMessageBox: {
-    width: "25%",
-    // float: "left",
-  },
+//   receivedMessageBox: {
+//     width: "25%",
+//     // float: "left",
+//   },
 
-  receivedMessage: {
-    backgroundColor: "rgb(0, 107, 141)",
+//   receivedMessage: {
+//     backgroundColor: "rgb(0, 107, 141)",
 
-    boxShadow:
-      "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
-  },
-  sentMessage: {
-    backgroundColor: "rgb(0, 102, 161)",
+//     boxShadow:
+//       "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+//   },
+//   sentMessage: {
+//     backgroundColor: "rgb(0, 102, 161)",
 
-    boxShadow:
-      "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
-  },
-});
+//     boxShadow:
+//       "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+//   },
+// });
 
 export function Message(props) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const user = JSON.parse(localStorage.getItem("user"));
 
   console.log("message props: ", props);
@@ -39,11 +38,11 @@ export function Message(props) {
   return (
     <Box>
       <Box
-        className={
-          user.uuid === props.messages.sender_uuid
-            ? classes.sentMessageBox
-            : classes.receivedMessageBox
-        }
+      // className={
+      //   user.uuid === props.messages.sender_uuid
+      //     ? classes.sentMessageBox
+      //     : classes.receivedMessageBox
+      // }
       >
         <Box
           sx={{
@@ -56,11 +55,11 @@ export function Message(props) {
           {/* <p>{props.messages.time}</p> */}
         </Box>
         <Box
-          className={
-            user.uuid === props.messages.sender_uuid
-              ? classes.sentMessage
-              : classes.receivedMessage
-          }
+          // className={
+          //   user.uuid === props.messages.sender_uuid
+          //     ? classes.sentMessage
+          //     : classes.receivedMessage
+          // }
           sx={{
             width: "100%",
             borderRadius: "25px",
