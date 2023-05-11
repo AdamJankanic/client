@@ -104,9 +104,6 @@ instance.interceptors.request.use(async (config) => {
     return config;
   }
 
-  // console.log("intercepting request");
-  // console.log(await checkAuth());
-
   if (await checkAuth()) {
     console.log("auth is valid");
     const token = localStorage.getItem("token");

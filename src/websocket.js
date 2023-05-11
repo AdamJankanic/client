@@ -1,6 +1,5 @@
 import { io } from "socket.io-client";
 import axios from "axios";
-// const socket = io("http://localhost:5000"); // Replace with your server URL
 
 // socket.on("connect", () => {
 //   console.log("Connected to WebSocket server");
