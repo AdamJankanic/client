@@ -8,6 +8,8 @@ import Typography from "@mui/material/Typography";
 import parse from "autosuggest-highlight/parse";
 import { debounce } from "@mui/material/utils";
 
+import { useJsApiLoader } from "@react-google-maps/api";
+
 // This key was created specifically for the demo in mui.com.
 // You need to create a new one for your application.
 const GOOGLE_MAPS_API_KEY = "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo";
@@ -32,17 +34,24 @@ export function LocationAutocomplete({ handleSetLocation }) {
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
 
-  if (typeof window !== "undefined" && !loaded.current) {
-    if (!document.querySelector("#google-maps")) {
-      loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
-        document.querySelector("head"),
-        "google-maps"
-      );
-    }
+  // if (typeof window !== "undefined" && !loaded.current) {
+  //   if (!document.querySelector("#google-maps")) {
+  //     loadScript(
+  //       `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
+  //       document.querySelector("head"),
+  //       "google-maps"
+  //     );
+  //   }
 
-    loaded.current = true;
-  }
+  //   loaded.current = true;
+  // }
+
+  const [libraries] = React.useState(["places"]);
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo",
+    libraries,
+  });
 
   const fetch = React.useMemo(
     () =>
