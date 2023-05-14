@@ -94,6 +94,7 @@ instance.interceptors.request.use(async (config) => {
   } else {
     console.log("auth is not valid");
     // redirect to login page
+    return config;
     // window.location.href = "/signin";
   }
 });
