@@ -111,6 +111,7 @@ export function Test() {
 
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 434) navigate("/verify");
       });
   }, []);
 

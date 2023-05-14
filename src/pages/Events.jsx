@@ -61,7 +61,6 @@ export function Events() {
   //function to create a user
   const getAllEvents = async () => {
     try {
-      // const response = await axiosConfig.post("/user/create", event);
       const response = await axiosConfig.get("/event/all");
       console.log(response);
       console.log(response.data);
@@ -74,6 +73,7 @@ export function Events() {
       // dispatch(addEvent(response.data));
     } catch (error) {
       console.log(error);
+      if (error.response.status === 434) navigate("/verify");
     }
   };
 

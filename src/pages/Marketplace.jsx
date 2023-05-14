@@ -57,7 +57,6 @@ export function Marketplace() {
 
   const getAllEvents = async () => {
     try {
-      // const response = await axiosConfig.post("/user/create", event);
       const response = await axiosConfig.get("/offer/all");
       console.log(response);
       console.log(response.data);
@@ -70,6 +69,7 @@ export function Marketplace() {
       // dispatch(addEvent(response.data));
     } catch (error) {
       console.log(error);
+      if (error.response.status === 434) navigate("/verify");
     }
   };
 

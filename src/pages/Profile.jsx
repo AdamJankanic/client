@@ -9,7 +9,7 @@ import {
   Toolbar,
 } from "@mui/material";
 import { Navbar } from "../components/Navbar";
-
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axiosConfig from "../axiosConfig.js";
 import { myEvents, clearStore } from "../reducers/Events";
@@ -73,6 +73,7 @@ export function Profile() {
   const [activeButton, setActiveButton] = React.useState("myProfile");
   const dispatch = useDispatch();
   const selector = useSelector((state) => state);
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -81,24 +82,36 @@ export function Profile() {
   }
 
   async function getMyEvents() {
-    axiosConfig.get(`/event/myevents/${user.uuid}`).then((res) => {
-      dispatch(clearStore());
-      // console.log("my events");
-      // console.log(res.data);
-      res.data.forEach((event) => {
-        dispatch(myEvents(event));
+    axiosConfig
+      .get(`/event/myevents/${user.uuid}`)
+      .then((res) => {
+        dispatch(clearStore());
+        // console.log("my events");
+        // console.log(res.data);
+        res.data.forEach((event) => {
+          dispatch(myEvents(event));
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 434) navigate("/verify");
       });
-    });
   }
   async function getMyOffers() {
-    axiosConfig.get(`/offer/myoffers/${user.uuid}`).then((res) => {
-      dispatch(clearOffers());
-      // console.log("my events");
-      // console.log(res.data);
-      res.data.forEach((offer) => {
-        dispatch(myOffers(offer));
+    axiosConfig
+      .get(`/offer/myoffers/${user.uuid}`)
+      .then((res) => {
+        dispatch(clearOffers());
+        // console.log("my events");
+        // console.log(res.data);
+        res.data.forEach((offer) => {
+          dispatch(myOffers(offer));
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 434) navigate("/verify");
       });
-    });
   }
 
   React.useEffect(() => {

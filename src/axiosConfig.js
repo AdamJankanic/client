@@ -49,12 +49,12 @@ async function checkAuth() {
           localStorage.setItem("token", token);
           localStorage.setItem("tokenExpiration", expiration);
           localStorage.setItem("refreshExpiration", refreshExpiration);
-          return true;
+          // return true;
         })
         .catch((error) => {
           console.log("error refreshing token");
           console.log(error);
-          return false;
+          // return false;
         });
     }
     // return 145;
@@ -83,7 +83,7 @@ instance.interceptors.request.use(async (config) => {
     return config;
   }
 
-  console.log("interceptor checking auth", await checkAuth());
+  // console.log("interceptor checking auth", await checkAuth());
 
   if (await checkAuth()) {
     console.log("auth is valid");
@@ -94,7 +94,7 @@ instance.interceptors.request.use(async (config) => {
   } else {
     console.log("auth is not valid");
     // redirect to login page
-    window.location.href = "/signin";
+    // window.location.href = "/signin";
   }
 });
 
