@@ -18,12 +18,12 @@ function App() {
         <Route path="/" element={<Test />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/navigation" element={<Test />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/events" element={<Events />} />
         <Route path="/market" element={<Marketplace />} />
         <Route path="/verify" element={<Verification />} />
-        <Route path="/try" element={<LocationMap />} />
+        {/* <Route path="/navigation" element={<Test />} /> */}
+        {/* <Route path="/try" element={<LocationMap />} /> */}
       </Routes>
     </div>
   );

@@ -28,34 +28,37 @@ async function checkAuth() {
     } else {
       console.log("refresh token is valid");
       // refresh token is still valid, request new access token
-      await axios
-        // .get("http://127.0.0.1:5000/api/user/refresh", {
-        //   withCredentials: true,
-        // })
-        .get("https://server-production-412a.up.railway.app/api/user/refresh", {
-          withCredentials: true,
-        })
-        .then((response) => {
-          const { token, expiration, refreshExpiration } = response.data;
-          localStorage.setItem("token", token);
-          localStorage.setItem("tokenExpiration", expiration);
-          localStorage.setItem("refreshExpiration", refreshExpiration);
+      try {
+        const response = await axios
+          // .get(
+          // "http://127.0.0.1:5000/api/user/refresh",
+          // {
+          //   withCredentials: true,
+          // }
+          // );
+          .get(
+            "https://server-production-412a.up.railway.app/api/user/refresh",
+            {
+              withCredentials: true,
+            }
+          );
+        const { token, expiration, refreshExpiration } = response.data;
 
-          console.log("token refreshed");
-          console.log(token);
-          console.log(expiration);
-          console.log(refreshExpiration);
+        console.log("Token refreshed");
+        console.log(token);
+        console.log(expiration);
+        console.log(refreshExpiration);
 
-          localStorage.setItem("token", token);
-          localStorage.setItem("tokenExpiration", expiration);
-          localStorage.setItem("refreshExpiration", refreshExpiration);
-          return true;
-        })
-        .catch((error) => {
-          console.log("error refreshing token");
-          console.log(error);
-          return false;
-        });
+        localStorage.setItem("token", token);
+        localStorage.setItem("tokenExpiration", expiration);
+        localStorage.setItem("refreshExpiration", refreshExpiration);
+
+        return true;
+      } catch (error) {
+        console.log("Error refreshing token");
+        console.log(error);
+        return false;
+      }
     }
     // return 145;
   } else {
@@ -94,8 +97,8 @@ instance.interceptors.request.use(async (config) => {
   } else {
     console.log("auth is not valid");
     // redirect to login page
-    return config;
-    // window.location.href = "/signin";
+
+    window.location.href = "/signin";
   }
 });
 
