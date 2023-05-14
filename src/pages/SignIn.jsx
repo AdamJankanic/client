@@ -24,7 +24,7 @@ import axiosConfig from "../axiosConfig.js";
 export function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log(document.cookie);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
