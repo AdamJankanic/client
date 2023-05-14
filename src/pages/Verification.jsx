@@ -15,6 +15,10 @@ export function Verification() {
       })
       .then((response) => {
         console.log("good ", response);
+        if (response.status === 200) {
+          alert("Verification successful");
+          window.location.href = "/";
+        }
       })
       .catch((error) => {
         console.log("bad ", error);
