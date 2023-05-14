@@ -32,26 +32,49 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addOffer,
-  deleteOffer,
+  clearOffers,
   setOfferDetailModal,
 } from "../reducers/Offers.js";
-import { current } from "@reduxjs/toolkit";
+
+import axiosConfig from "../axiosConfig.js";
 
 export function Marketplace() {
   // getting user location
-  React.useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log("Geolocation is supported by this browser.");
-          console.log(position.coords.latitude, position.coords.longitude);
-          console.log(position);
-        },
-        (error) => console.log(error)
-      );
-    } else {
-      console.log("Geolocation is not supported by this browser.");
+  // React.useEffect(() => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         console.log("Geolocation is supported by this browser.");
+  //         console.log(position.coords.latitude, position.coords.longitude);
+  //         console.log(position);
+  //       },
+  //       (error) => console.log(error)
+  //     );
+  //   } else {
+  //     console.log("Geolocation is not supported by this browser.");
+  //   }
+  // }, []);
+
+  const getAllEvents = async () => {
+    try {
+      // const response = await axiosConfig.post("/user/create", event);
+      const response = await axiosConfig.get("/offer/all");
+      console.log(response);
+      console.log(response.data);
+
+      dispatch(clearOffers());
+      response.data.forEach((event) => {
+        dispatch(addOffer(event));
+      });
+
+      // dispatch(addEvent(response.data));
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  React.useEffect(() => {
+    getAllEvents();
   }, []);
 
   /************************************/
@@ -110,7 +133,7 @@ export function Marketplace() {
           .toLowerCase()
           .includes(searchText.toLowerCase().trim())) &&
       (checkedCategories.length === 0 ||
-        checkedCategories.includes(offer.category))
+        checkedCategories.includes(offer.Category.name))
     );
   });
 
@@ -286,30 +309,6 @@ export function Marketplace() {
             </FormGroup>
           </Box>
 
-          {/* <Button
-            variant="contained"
-            sx={{
-              width: "90%",
-              marginTop: "0.5rem",
-              color: "white",
-              fontSize: "1.2rem",
-              // backgroundColor: "white",
-              backgroundColor: "rgb(0, 107, 141)",
-              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-              padding: "0.1rem 1rem",
-              alignSelf: "center",
-              boxShadow:
-                "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
-              ":hover": {
-                backgroundColor: "#DDD",
-                boxShadow: "none",
-              },
-            }}
-          
-          >
-            Search
-          </Button> */}
-
           <Button
             variant="contained"
             sx={{
@@ -322,7 +321,7 @@ export function Marketplace() {
               fontSize: "1.2rem",
               // backgroundColor: "white",
               backgroundColor: "rgb(0, 107, 141)",
-              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+
               padding: "0.1rem 1rem",
               alignSelf: "center",
               boxShadow:

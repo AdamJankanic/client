@@ -14,18 +14,19 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { LocationMap } from "./LocationMap";
 import axiosConfig from "../axiosConfig";
+import { ModalEditEvent } from "./ModalEditEvent";
 
-export function Event(props) {
+export function EventProfile(props) {
   const [modal, setModal] = React.useState(false);
-  const [directionsResponse, setDirectionsResponse] = React.useState(null);
+
   const handleClose = () => {
-    console.log("handleCloseeeeeeeeeeeeeeeeee");
     setModal(false);
+    console.log("handleCloseeeeeeeeeeeeeeeeee");
+    return false;
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
   const event = props.event;
-  const userLocation = props.userLocation;
 
   // Create Date object from string
   const date = new Date(event.date);
@@ -49,60 +50,16 @@ export function Event(props) {
   // Format time string
   const timeString = `${formattedHours}:${formattedMinutes}`;
 
-  const [libraries] = React.useState(["places"]);
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo",
-    libraries,
-  });
-
-  async function sendLocation() {
+  function handleEdit() {
     if (modal) return;
-    console.log("sendLocation");
-    if (event.location === "" || userLocation === "") {
-      alert("You are not sharing your location");
-      return;
-    }
-    const directionsService = new window.google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin: { lat: userLocation.latitude, lng: userLocation.longitude },
-      destination: event.location,
-      travelMode: window.google.maps.TravelMode.DRIVING,
-    });
-    console.log(results);
-    setDirectionsResponse(results);
     setModal(true);
-  }
-
-  async function joinEvent() {
-    await axiosConfig
-      .post("/event/join", {
-        user_uuid: user.uuid,
-        event_uuid: event.uuid,
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.status === 204) {
-          alert("You have already joined this event");
-        } else if (response.status === 200) {
-          alert("You have successfully joined this event");
-        }
-      })
-      .catch((error) => {
-        alert("Something went wrong");
-        console.log(error);
-      });
   }
 
   return (
     <Box
-      onClick={sendLocation}
+      onClick={handleEdit}
       style={{
-        // width: "25%",
         cursor: "pointer",
-        // height: "20rem",
-        // margin: "auto",
-        // marginTop: "2rem",
         margin: "0.5rem",
         borderRadius: "15px",
         overflow: "hidden",
@@ -159,10 +116,6 @@ export function Event(props) {
             <h3 style={{ marginTop: 0, marginBottom: 0 }}>{event.price}</h3>
           </Box>
 
-          {/* <h3 style={{ marginTop: 0, marginBottom: 0 }}>17:00</h3>
-          <h3 style={{ marginTop: 0, marginBottom: 0 }}>31.10.2022</h3>
-          <h3 style={{ marginTop: 0, marginBottom: 0 }}>2h</h3>
-          <h3 style={{ marginTop: 0, marginBottom: 0 }}>Zadarmo</h3> */}
           <div
             style={{
               gridColumn: "-1/1",
@@ -227,16 +180,15 @@ export function Event(props) {
             boxShadow: "none",
           },
         }}
-        onClick={joinEvent}
       >
         Join
       </Button>
 
-      <LocationMap
-        directionsResponse={directionsResponse}
+      <ModalEditEvent
         open={modal}
         onClose={handleClose}
-      ></LocationMap>
+        event={event}
+      ></ModalEditEvent>
     </Box>
   );
 }

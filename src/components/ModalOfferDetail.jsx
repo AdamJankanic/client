@@ -32,11 +32,12 @@ export function ModalOfferDetail(props) {
   const dispatch = useDispatch();
 
   const selector = useSelector((state) => state);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const selectedId = selector.offersStore.offerDetailId;
 
   const selectedOffer = selector.offersStore.allOffers.find(
-    (offer) => offer.id === selectedId
+    (offer) => offer.uuid === selectedId
   );
 
   if (selectedId == null) {
@@ -85,7 +86,7 @@ export function ModalOfferDetail(props) {
             <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               <LocationOnIcon />
               <h3 style={{ marginTop: 0, marginBottom: 0 }}>
-                {selectedOffer.place}
+                {selectedOffer.location}
               </h3>
             </Box>
 
@@ -130,6 +131,7 @@ export function ModalOfferDetail(props) {
 
           {/* contact user button */}
           <Button
+            disabled={user.uuid === selectedOffer.creator_uuid}
             variant="contained"
             sx={{
               width: "100%",
@@ -149,7 +151,7 @@ export function ModalOfferDetail(props) {
               },
             }}
           >
-            Contact User
+            Contact Seller
           </Button>
         </Box>
       </Modal>

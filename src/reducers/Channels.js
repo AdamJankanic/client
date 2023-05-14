@@ -5,15 +5,11 @@ const channelsSlice = createSlice({
   initialState: {
     channels: [],
     active: 1,
+    activeWebsockets: [],
   },
   reducers: {
     addChannel: (state, action) => {
-      // console.log("addMessage");
       state.channels.push(action.payload);
-      // console log messages after action
-      // console.log(
-      //   JSON.stringify(state.messages[state.messages.length - 1].text)
-      // );
     },
     activeChannel: (state, action) => {
       state.active = action.payload;
@@ -22,8 +18,15 @@ const channelsSlice = createSlice({
     clearStore: (state) => {
       state.channels = [];
     },
+
+    addWebsocket: (state, action) => {
+      if (!state.activeWebsockets.includes(action.payload)) {
+        state.activeWebsockets.push(action.payload);
+      }
+    },
   },
 });
 
-export const { addChannel, activeChannel, clearStore } = channelsSlice.actions;
+export const { addChannel, activeChannel, clearStore, addWebsocket } =
+  channelsSlice.actions;
 export default channelsSlice.reducer;

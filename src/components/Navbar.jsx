@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import * as React from "react";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-// import { joinChats } from "../websocket.js";
+import axioConfig from "../axiosConfig.js";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -35,7 +35,12 @@ export function Navbar() {
   // changing pages
   const handlePageChange = (event) => {
     if (event.target.innerText === "Log out") {
-      navigate("/signup");
+      const user = JSON.parse(localStorage.getItem("user"));
+      axioConfig.get(`/user/logout/${user.uuid}`).then((response) => {
+        console.log(response);
+        localStorage.clear();
+        navigate("/signin");
+      });
     } else if (event.target.innerText === "My account") {
       navigate("/profile");
     } else if (event.target.innerText === "Chat") {

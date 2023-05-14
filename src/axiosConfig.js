@@ -10,7 +10,7 @@ async function checkAuth() {
   console.log("refresh token expiration: " + refreshTokenExpiry);
   console.log("current time: " + Math.floor(Date.now() / 1000));
 
-  if (!token) {
+  if (!token || !tokenExpiry) {
     // user is not logged in
     console.log("user is not logged in");
 
@@ -29,6 +29,9 @@ async function checkAuth() {
       console.log("refresh token is valid");
       // refresh token is still valid, request new access token
       await axios
+        // .get("http://127.0.0.1:5000/api/user/refresh", {
+        //   withCredentials: true,
+        // })
         .get("https://server-production-412a.up.railway.app/api/user/refresh", {
           withCredentials: true,
         })
@@ -95,11 +98,16 @@ async function checkAuth() {
 const instance = axios.create({
   // .. where we make our configurations
   baseURL: "https://server-production-412a.up.railway.app/api",
+  // baseURL: "http://127.0.0.1:5000/api",
   withCredentials: true,
 });
 
 instance.interceptors.request.use(async (config) => {
-  if (config.url === "/user/login") {
+  if (
+    config.url === "/user/login" ||
+    config.url === "/user/register" ||
+    config.url.includes("/user/logout")
+  ) {
     console.log("gg we won");
     return config;
   }

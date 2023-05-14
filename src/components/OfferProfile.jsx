@@ -9,26 +9,27 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { useDispatch, useSelector } from "react-redux";
 import { setOfferDetailId, setOfferDetailModal } from "../reducers/Offers.js";
+import { ModalEditOffer } from "./ModalEditOffer";
 
-export function Offer(props) {
+export function OfferProfile(props) {
   const dispatch = useDispatch();
 
-  const handleOfferClick = (offer) => {
-    console.log(offer);
-    dispatch(setOfferDetailId(offer.uuid));
-    dispatch(setOfferDetailModal());
+  const [modal, setModal] = React.useState(false);
+
+  const handleClose = () => {
+    setModal(false);
+    console.log("handleCloseeeeeeeeeeeeeeeeee");
+    return false;
   };
+
+  function handleEdit() {
+    if (modal) return;
+    setModal(true);
+  }
 
   return (
     <Box
       sx={{
-        // border: "1px solid black",
-
-        // width: "25%",
-        // height: "15rem",
-        // margin: "auto",
-        // marginTop: "2rem",
-        // height: "25rem",
         cursor: "pointer",
         margin: "0.5rem",
         borderRadius: "15px",
@@ -36,9 +37,7 @@ export function Offer(props) {
         boxShadow:
           "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
       }}
-      onClick={() => {
-        handleOfferClick(props.offer);
-      }}
+      onClick={handleEdit}
     >
       <img
         src={props.offer.image}
@@ -103,7 +102,8 @@ export function Offer(props) {
           </Typography>
         </Box>
       </Box>
-      {/* <Button sx={{ width: "100%", height: "3rem" }}>Contact user</Button> */}
+
+      <ModalEditOffer open={modal} onClose={handleClose} offer={props.offer} />
     </Box>
   );
 }

@@ -23,7 +23,7 @@ import {
   Select,
 } from "@mui/material";
 
-import axiosCongig from "../axiosConfig.js";
+import axiosConfig from "../axiosConfig.js";
 
 const style = {
   position: "absolute",
@@ -40,19 +40,46 @@ const style = {
   borderRadius: "10px",
 };
 
-export function ModalCreateOffer(props) {
+export function ModalEditOffer(props) {
   const dispatch = useDispatch();
+  let offer = props.offer;
+
+  function getDetails() {
+    axiosConfig.get(`/offer/detail/${offer.uuid}`).then((res) => {
+      console.log("offer details");
+      console.log(res.data);
+      offer = res.data;
+    });
+  }
+
+  React.useEffect(() => {
+    console.log("offer detaaaaaails");
+    resetToDefaultValues();
+    getDetails();
+  }, [props.open]);
+
+  function resetToDefaultValues() {
+    setOfferTitle(offer.title);
+    setOfferLocation(offer.location);
+    setOfferPrice(offer.price);
+    setOfferDescription(offer.description);
+    setCategory(offer.Category.name);
+    setState(offer.state);
+    setDelivery(offer.delivery);
+    setFile(offer.image);
+  }
 
   // handle states
-  const [state, setState] = React.useState("");
+  const [state, setState] = React.useState(offer.state);
   const user = JSON.parse(localStorage.getItem("user"));
 
   const handleStateChange = (event) => {
     setState(event.target.value);
   };
 
+  console.log("offer in modal edit offer", offer);
   // handle categories
-  const [category, setCategory] = React.useState("");
+  const [category, setCategory] = React.useState(offer?.Category?.name);
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
@@ -101,10 +128,12 @@ export function ModalCreateOffer(props) {
   };
 
   // handle input changes in form
-  const [offerTitle, setOfferTitle] = React.useState("");
+  const [offerTitle, setOfferTitle] = React.useState(offer.title);
   const [offerLocation, setOfferLocation] = React.useState("");
-  const [offerPrice, setOfferPrice] = React.useState("");
-  const [offerDescription, setOfferDescription] = React.useState("");
+  const [offerPrice, setOfferPrice] = React.useState(offer.price);
+  const [offerDescription, setOfferDescription] = React.useState(
+    offer.description
+  );
   const handleOfferTitleChange = (event) => {
     setOfferTitle(event.target.value);
   };
@@ -127,14 +156,15 @@ export function ModalCreateOffer(props) {
   };
 
   // handle delivery checkbox
-  const [offerDelivery, setDelivery] = React.useState(true);
+  const [offerDelivery, setDelivery] = React.useState(offer.delivery);
   const handleDeliveryChange = (event) => {
     setDelivery(event.target.checked);
   };
 
   // create an offer
-  const handleCreateOffer = (event) => {
+  const handleEditOffer = (event) => {
     const newOffer = {
+      uuid: offer.uuid,
       title: offerTitle,
       category: category,
       creator_uuid: user.uuid,
@@ -147,23 +177,28 @@ export function ModalCreateOffer(props) {
       // imageType: file.type,
     };
 
-    // console.log(newOffer);
+    if (
+      !newOffer.title ||
+      !newOffer.category ||
+      !newOffer.description ||
+      !newOffer.state ||
+      !newOffer.price ||
+      !newOffer.location
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    console.log(newOffer);
     // dispatch(addOffer(newOffer));
 
     // send offer to server
-    axiosCongig.post("/offer/create", newOffer);
-
-    // reset form
-    setOfferTitle("");
-    setOfferLocation("");
-    setOfferPrice("");
-    setOfferDescription("");
-    setCategory("");
-    setState("");
-    setDelivery(true);
-    setFile(null);
-    setFileName(null);
-    setFileBase64(null);
+    axiosConfig.put(`/offer/update`, newOffer).then((res) => {
+      console.log(res.data);
+    });
+    // axiosCongig.post("/offer/create", newOffer);
+    window.location.reload();
+    props.onClose();
   };
 
   return (
@@ -176,7 +211,7 @@ export function ModalCreateOffer(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <strong>Create a new offer</strong>
+            <strong>Edit an offer</strong>
           </Typography>
 
           <Box
@@ -345,11 +380,10 @@ export function ModalCreateOffer(props) {
               },
             }}
             onClick={() => {
-              handleCreateOffer();
-              props.onClose();
+              handleEditOffer();
             }}
           >
-            Create
+            SAVE
           </Button>
         </Box>
       </Modal>

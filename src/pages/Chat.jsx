@@ -24,8 +24,6 @@ import { Navbar } from "../components/Navbar";
 import { Message } from "../components/Message";
 import { Channel } from "../components/Channel";
 
-import { ModalWindow } from "../components/ModalWindow";
-
 import {
   FormControl,
   FormControlLabel,
@@ -40,34 +38,51 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { addChannel, clearStore } from "../reducers/Channels";
 import { addMessage, removeMessages } from "../reducers/Messages";
-import { activeChannel } from "../reducers/Channels";
+import { activeChannel, addWebsocket } from "../reducers/Channels";
 
 import axiosConfig from "../axiosConfig.js";
-import { io } from "socket.io-client";
+
 import {
   connectToChannelNamespace,
   sendMessageToServer,
 } from "../websocket.js";
 
-// const useStyles = makeStyles({
-//   activeChannel: {
-//     backgroundImage:
-//       "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
-//     boxShadow:
-//       "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
-//   },
-//   nonActiveChannel: {
-//     // backgroundImage:
-//     //   "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
-//     boxShadow:
-//       "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+const useChannel = {
+  alignItems: "center",
+  // alignSelf: "center",
+  height: "3.5rem",
+  width: "95%",
+  marginBottom: "0.5rem",
+  cursor: "pointer",
+  borderRadius: "15px",
+  backgroundImage:
+    "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%)",
+  boxShadow:
+    "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+};
 
-//     border: "10px solid ",
-//     borderImage:
-//       "radial-gradient(circle at 10% 20%, rgb(26, 178, 203) 0%, rgb(0, 102, 161) 90.1%) 1",
-//     borderRadius: "15rem",
-//   },
-// });
+const nonUseChannel = {
+  alignItems: "center",
+  // alignSelf: "center",
+  height: "3.5rem",
+  width: "95%",
+  marginBottom: "0.5rem",
+  cursor: "pointer",
+  borderRadius: "15px",
+
+  boxShadow:
+    "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+
+  border: "8px solid rgb(26, 178, 203)",
+};
+
+const messageContainer = {
+  width: "20%",
+  height: "100%",
+  overflowY: "scroll",
+  overflowX: "hidden",
+  // backgroungColor: "red",
+};
 
 export function Test() {
   const dispatch = useDispatch();
@@ -76,12 +91,13 @@ export function Test() {
   // const classes = useStyles();
 
   const active = selector.channelsStore.active;
-
-  // const uuid = "a45a5324-ddb4-43f2-b325-1a717654c505";
+  const joinedWebsocket = selector.channelsStore.activeWebsockets;
 
   // fetch all chats
   React.useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) return navigate("/signin");
 
     axiosConfig
       .get(`/chat/mychats/${user.uuid}`)
@@ -105,7 +121,6 @@ export function Test() {
   };
 
   const [text, setText] = React.useState("");
-  const [modal, setModal] = React.useState(false);
 
   const [radioValue, setSelectedValue] = React.useState("all");
 
@@ -151,35 +166,21 @@ export function Test() {
   });
 
   // active channel
-
-  // file upload
-  const fileInputRef = React.useRef(null);
-  const [files, setFiles] = React.useState([]);
-
-  const handleUploadClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleFileUpload = (event) => {
-    // const file = event.target.files[0];
-    // // Do something with the uploaded file
-    // console.log(file.name);
-    // setFiles(file);
-    // setText(text + file.name);
-  };
-
-  // active channel
   function clickedChannel(id) {
     console.log("active channel: " + id);
+
+    console.log("joined websockets: " + joinedWebsocket);
+    console.log("idecko: " + id);
+    if (joinedWebsocket.includes(id)) {
+      dispatch(activeChannel(id));
+      return;
+    }
+
+    dispatch(addWebsocket(id));
     connectToChannelNamespace(id);
 
     dispatch(activeChannel(id));
   }
-
-  // modal window
-  const handleClose = () => {
-    setModal(false);
-  };
 
   // message text
   const handleChange = (event) => {
@@ -195,18 +196,29 @@ export function Test() {
     // console.log(text);
     const user = JSON.parse(localStorage.getItem("user"));
     const newMessage = {
-      user_uuid: user.uuid,
-      message: text.trim(),
+      sender_uuid: user.uuid,
+      content: text.trim(),
     };
 
     console.log("dispatched message");
     console.log(newMessage);
-    // dispatch(addMessage(newMessage));
 
     sendMessageToServer(newMessage);
+    dispatch(addMessage(newMessage));
 
     setText("");
   }
+
+  //scroll to bottom of messages
+  const messagesEndRef = React.useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [fetchedMessages]);
 
   return (
     <Box
@@ -305,22 +317,9 @@ export function Test() {
                 <ListItem
                   key={index}
                   disablePadding
-                  sx={{
-                    alignItems: "center",
-                    // alignSelf: "center",
-                    height: "3.5rem",
-                    width: "95%",
-                    marginBottom: "0.5rem",
-                    cursor: "pointer",
-
-                    borderRadius: "15px",
-                  }}
+                  sx={active === channel.uuid ? useChannel : nonUseChannel}
                   onClick={clickedChannel.bind(this, channel.uuid)}
-                  className={
-                    active === channel.uuid
-                    // ? classes.activeChannel
-                    // : classes.nonActiveChannel
-                  }
+                  className={""}
                 >
                   <Channel
                     key={index}
@@ -349,16 +348,13 @@ export function Test() {
         }}
       >
         <Toolbar />
-        <ModalWindow open={modal} onClose={handleClose} />
-
         {/* <Message messages={messages[0]} /> */}
-
         {fetchedMessages.map((message, index) => {
           console.log("SPRAVA", message);
           return <Message key={index} messages={message} />;
         })}
-
         {/* <Message /> */}
+        <div ref={messagesEndRef} />
       </Box>
       <TextField
         value={text}
@@ -376,15 +372,7 @@ export function Test() {
               </Tooltip>
             </InputAdornment>
           ),
-          startAdornment: (
-            <InputAdornment position="start">
-              <Tooltip title="Upload a file">
-                <IconButton onClick={handleUploadClick}>
-                  <AddIcon />
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          ),
+          startAdornment: <InputAdornment position="start"></InputAdornment>,
         }}
         id="messageInput"
         // label="Message"
@@ -398,21 +386,6 @@ export function Test() {
           bottom: 0,
         }}
       ></TextField>
-      {/* <Input
-        type="file"
-        sx={{
-          display: "none",
-        }}
-        onChange={handleFileUpload}
-        ref={fileInputRef}
-      ></Input> */}
-      <input
-        type="file"
-        onChange={handleFileUpload}
-        ref={fileInputRef}
-        multiple={false}
-        style={{ display: "none" }}
-      ></input>
     </Box>
   );
 }

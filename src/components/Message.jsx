@@ -1,32 +1,42 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
-// const useStyles = makeStyles({
-//   sentMessageBox: {
-//     float: "right",
-//     width: "25%",
-//     position: "relative",
-//     // left: "50%",
-//   },
+const sentMessageBox = {
+  float: "right",
+  width: "25%",
+  position: "relative",
+  // left: "50%",
+};
 
-//   receivedMessageBox: {
-//     width: "25%",
-//     // float: "left",
-//   },
+const receivedMessageBox = {
+  width: "25%",
+  // float: "left",
+};
 
-//   receivedMessage: {
-//     backgroundColor: "rgb(0, 107, 141)",
+const receivedMessage = {
+  width: "100%",
+  borderRadius: "25px",
+  paddingLeft: 2,
+  paddingRight: 2,
+  paddingTop: 1,
+  paddingBottom: 1,
+  backgroundColor: "rgb(0, 107, 141)",
 
-//     boxShadow:
-//       "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
-//   },
-//   sentMessage: {
-//     backgroundColor: "rgb(0, 102, 161)",
+  boxShadow:
+    "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+};
+const sentMessage = {
+  width: "100%",
+  borderRadius: "25px",
+  paddingLeft: 2,
+  paddingRight: 2,
+  paddingTop: 1,
+  paddingBottom: 1,
+  backgroundColor: "rgb(0, 102, 161)",
 
-//     boxShadow:
-//       "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
-//   },
-// });
+  boxShadow:
+    "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+};
 
 export function Message(props) {
   // const classes = useStyles();
@@ -38,11 +48,11 @@ export function Message(props) {
   return (
     <Box>
       <Box
-      // className={
-      //   user.uuid === props.messages.sender_uuid
-      //     ? classes.sentMessageBox
-      //     : classes.receivedMessageBox
-      // }
+        sx={
+          user.uuid === props.messages.sender_uuid
+            ? sentMessageBox
+            : receivedMessageBox
+        }
       >
         <Box
           sx={{
@@ -55,19 +65,11 @@ export function Message(props) {
           {/* <p>{props.messages.time}</p> */}
         </Box>
         <Box
-          // className={
-          //   user.uuid === props.messages.sender_uuid
-          //     ? classes.sentMessage
-          //     : classes.receivedMessage
-          // }
-          sx={{
-            width: "100%",
-            borderRadius: "25px",
-            paddingLeft: 2,
-            paddingRight: 2,
-            paddingTop: 1,
-            paddingBottom: 1,
-          }}
+          sx={
+            user.uuid === props.messages.sender_uuid
+              ? sentMessage
+              : receivedMessage
+          }
         >
           <Typography
             sx={{

@@ -1,6 +1,9 @@
 import { io } from "socket.io-client";
 import axios from "axios";
 
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from "./reducers/Messages.js";
+
 // socket.on("connect", () => {
 //   console.log("Connected to WebSocket server");
 // });
@@ -35,6 +38,9 @@ async function getToken() {
   //check if token is expired
   if (Math.floor(Date.now() / 1000) > tokenExpiry) {
     await axios
+      // .get("http://127.0.0.1:5000/api/user/refresh", {
+      //   withCredentials: true,
+      // })
       .get("https://server-production-412a.up.railway.app/api/user/refresh", {
         withCredentials: true,
       })
@@ -58,6 +64,7 @@ async function connectToChannelNamespace(channelId) {
   console.log("CONNECTING TO CHANNEL NAMESPACE", channelId);
   newSocket = io(
     "https://server-production-412a.up.railway.app/chat/" + channelId,
+    // "http://localhost:5000/chat/" + channelId,
     {
       transportOptions: {
         polling: {
@@ -79,6 +86,8 @@ async function connectToChannelNamespace(channelId) {
 
   newSocket.on("receive_message", (message) => {
     console.log("Received message:", message);
+    const dispatch = useDispatch();
+    dispatch(addMessage(message));
   });
 }
 
@@ -87,6 +96,12 @@ function sendMessageToServer(message) {
   console.log("SENDING MESSAGE TO SERVER");
   console.log(message);
   newSocket.emit("chatMessage", message);
+}
+
+//function to disconnect from websocket namespace
+function disconnectFromChannelNamespace() {
+  console.log("DISCONNECTING FROM CHANNEL NAMESPACE");
+  newSocket.disconnect();
 }
 
 // const newSocket = io(
