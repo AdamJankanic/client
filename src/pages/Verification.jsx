@@ -1,7 +1,26 @@
 import { Box, Button, TextField } from "@mui/material";
 import * as React from "react";
 
+import axiosConfig from "../axiosConfig.js";
+
 export function Verification() {
+  const [verificationCode, setVerificationCode] = React.useState("");
+
+  function handleVerification() {
+    console.log(verificationCode);
+
+    axiosConfig
+      .post("/user/verify", {
+        verificationCode: verificationCode,
+      })
+      .then((response) => {
+        console.log("good ", response);
+      })
+      .catch((error) => {
+        console.log("bad ", error);
+      });
+  }
+
   return (
     <Box
       sx={{
@@ -11,8 +30,14 @@ export function Verification() {
       }}
     >
       <h1>Verification</h1>
-      <TextField type="number"></TextField>
-      <Button>Submit</Button>
+      <TextField
+        value={verificationCode}
+        onChange={(e) => {
+          setVerificationCode(e.target.value);
+        }}
+        type="number"
+      ></TextField>
+      <Button onClick={handleVerification}>Submit</Button>
     </Box>
   );
 }
