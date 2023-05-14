@@ -49,42 +49,13 @@ async function checkAuth() {
           localStorage.setItem("token", token);
           localStorage.setItem("tokenExpiration", expiration);
           localStorage.setItem("refreshExpiration", refreshExpiration);
+          return true;
         })
         .catch((error) => {
           console.log("error refreshing token");
           console.log(error);
           return false;
         });
-
-      // await fetch(
-      //   "https://server-production-412a.up.railway.app/api/user/refresh",
-      //   {
-      //     method: "GET",
-      //     credentials: "include", // Include credentials for cross-site requests
-      //   }
-      // )
-      //   .then((response) => {
-      //     // console.log("response: ", response.json());
-      //     return response.json();
-      //   })
-      //   .then((data) => {
-      //     const { token, expiration, refreshExpiration } = data;
-      //     console.log("ukazte data: ", data);
-      //     // localStorage.setItem("token", token);
-      //     // localStorage.setItem("tokenExpiration", expiration);
-      //     // localStorage.setItem("refreshExpiration", refreshExpiration);
-
-      //     console.log("Token refreshed");
-      //     console.log(token);
-      //     console.log(expiration);
-      //     console.log(refreshExpiration);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error refreshing token:");
-      //     console.log(error);
-      //   });
-
-      return true;
     }
     // return 145;
   } else {
@@ -111,6 +82,8 @@ instance.interceptors.request.use(async (config) => {
     console.log("gg we won");
     return config;
   }
+
+  console.log("interceptor checking auth", await checkAuth());
 
   if (await checkAuth()) {
     console.log("auth is valid");

@@ -9,6 +9,7 @@ import { Events } from "./pages/Events.jsx";
 import { Marketplace } from "./pages/Marketplace.jsx";
 import { Profile } from "./pages/Profile.jsx";
 import { LocationMap } from "./components/LocationMap.jsx";
+import { Verification } from "./pages/Verification.jsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/events" element={<Events />} />
         <Route path="/market" element={<Marketplace />} />
+        <Route path="/verify" element={<Verification />} />
         <Route path="/try" element={<LocationMap />} />
       </Routes>
     </div>

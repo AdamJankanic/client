@@ -13,23 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import axiosConfig from "../axiosConfig.js";
 
 const theme = createTheme();
 
@@ -37,10 +21,53 @@ export function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const user = {
+      username: data.get("username").trim(),
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+
+    console.log(user);
+
+    if (user.username.length < 4) {
+      alert("Username must be at least 4 characters");
+      return;
+    }
+
+    if (!user.email.includes("@")) {
+      alert("Invalid email");
+      return;
+    }
+
+    if (user.password.length < 8) {
+      alert("Password must be at least 8 characters");
+      return;
+    }
+
+    if (user.password !== data.get("confirmPassword")) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    axiosConfig
+      .post("/user/register", user)
+      .then((response) => {
+        console.log("CFYGVHBUNJIKML<:");
+        console.log(response);
+        if (response.status === 200) {
+          alert("Account created successfully");
+        }
+      })
+      .catch((error) => {
+        console.log("Error creating account");
+        console.log(error);
+        if (error.response.status === 432) {
+          alert("Only STU mails are allowed");
+        } else if (error.response.status === 433) {
+          alert("Email already in use");
+        }
+      });
   };
 
   return (
@@ -68,27 +95,18 @@ export function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="username"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="username"
+                  label="Username"
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -111,11 +129,13 @@ export function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                <TextField
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
                 />
               </Grid>
             </Grid>
@@ -127,7 +147,7 @@ export function SignUp() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="center">
               <Grid item>
                 <Link href="#" variant="body2">
                   Already have an account? Sign in
@@ -136,7 +156,6 @@ export function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

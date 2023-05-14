@@ -71,7 +71,8 @@ export function SignIn() {
             JSON.stringify(response.data.token.refreshExpiration)
           );
 
-          navigate("/");
+          if (response.data.user.verified) navigate("/");
+          else navigate("/verify");
         }
       });
   };
