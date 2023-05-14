@@ -49,12 +49,12 @@ async function checkAuth() {
           localStorage.setItem("token", token);
           localStorage.setItem("tokenExpiration", expiration);
           localStorage.setItem("refreshExpiration", refreshExpiration);
-          // return true;
+          return true;
         })
         .catch((error) => {
           console.log("error refreshing token");
           console.log(error);
-          // return false;
+          return false;
         });
     }
     // return 145;
