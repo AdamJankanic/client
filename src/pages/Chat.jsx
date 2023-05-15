@@ -47,6 +47,8 @@ import {
   sendMessageToServer,
 } from "../websocket.js";
 
+import { v4 as uuidv4 } from "uuid";
+
 const useChannel = {
   alignItems: "center",
   // alignSelf: "center",
@@ -194,9 +196,10 @@ export function Test() {
     }
   };
   function sendMessage(event) {
-    // console.log(text);
     const user = JSON.parse(localStorage.getItem("user"));
+
     const newMessage = {
+      id: uuidv4(),
       sender_uuid: user.uuid,
       content: text.trim(),
     };
