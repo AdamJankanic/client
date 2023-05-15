@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "./reducers/Messages.js";
-import store from "./index.js";
+import store from "./store.js";
 
 // socket.on("connect", () => {
 //   console.log("Connected to WebSocket server");

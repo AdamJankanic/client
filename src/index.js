@@ -6,12 +6,14 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import rootReducer from "./reducers/index.js";
+// import { configureStore } from "@reduxjs/toolkit";
+// import rootReducer from "./reducers/index.js";
 
-const store = configureStore({
-  reducer: rootReducer,
-});
+// const store = configureStore({
+//   reducer: rootReducer,
+// });
+
+import store from "./store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
