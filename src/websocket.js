@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "./reducers/Messages.js";
+import store from "index.js";
 
 // socket.on("connect", () => {
 //   console.log("Connected to WebSocket server");
@@ -86,7 +87,8 @@ async function connectToChannelNamespace(channelId) {
 
   newSocket.on("receive_message", (message) => {
     console.log("Received message:", message);
-    const dispatch = useDispatch();
+    const dispatch = store.dispatch;
+
     dispatch(addMessage(message));
   });
 }
