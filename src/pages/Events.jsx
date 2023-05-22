@@ -106,6 +106,7 @@ export function Events() {
   const handleFilterChange = (event) => {
     setFilter({ ...filter, [event.target.name]: event.target.checked });
     console.log({ ...filter });
+    if (searchText.length === 0) setSearchText(" ");
   };
 
   // allEvents

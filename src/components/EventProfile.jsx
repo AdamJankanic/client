@@ -92,7 +92,11 @@ export function EventProfile(props) {
             }}
           >
             <LocationOnIcon />
-            <h3 style={{ marginTop: 0, marginBottom: 0 }}>{event.location}</h3>
+            <h3 style={{ marginTop: 0, marginBottom: 0 }}>
+              {event.location.length > 15
+                ? event.location.substring(0, 12) + "..."
+                : event.location}
+            </h3>
           </Box>
 
           <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
@@ -157,10 +161,6 @@ export function EventProfile(props) {
       </div>
 
       <Button
-        disabled={
-          (event.joined === event.capacity && event.capacity !== 0) ||
-          user.uuid === event.creator_uuid
-        }
         variant="contained"
         sx={{
           width: "100%",
@@ -181,7 +181,7 @@ export function EventProfile(props) {
           },
         }}
       >
-        Join
+        Edit
       </Button>
 
       <ModalEditEvent

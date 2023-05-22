@@ -20,7 +20,8 @@ const receivedMessage = {
   paddingRight: 2,
   paddingTop: 1,
   paddingBottom: 1,
-  backgroundColor: "rgb(0, 107, 141)",
+  // backgroundColor: "rgb(0, 107, 141)",
+  backgroundColor: "rgb(211,211,211)",
 
   boxShadow:
     "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
@@ -42,9 +43,10 @@ export function Message(props) {
   // const classes = useStyles();
   const user = JSON.parse(localStorage.getItem("user"));
 
-  console.log("message props: ", props);
-  // console.log(props.messages.sender_uuid);
-  console.log(user.uuid !== props.messages.sender_uuid);
+  const date = new Date(props.messages.createdAt);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
   return (
     <Box>
       <Box
@@ -61,8 +63,8 @@ export function Message(props) {
             height: "2.5rem",
           }}
         >
-          {/* <p>{props.messages.name}</p> */}
-          {/* <p>{props.messages.time}</p> */}
+          <p>{props.messages.User.username}</p>
+          <p>{hours + ":" + minutes}</p>
         </Box>
         <Box
           sx={
@@ -73,7 +75,8 @@ export function Message(props) {
         >
           <Typography
             sx={{
-              color: "black",
+              color:
+                user.uuid === props.messages.sender_uuid ? "white" : "black",
             }}
           >
             {props.messages.content}

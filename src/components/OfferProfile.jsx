@@ -69,7 +69,9 @@ export function OfferProfile(props) {
           <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
             <LocationOnIcon />
             <h3 style={{ marginTop: 0, marginBottom: 0 }}>
-              {props.offer.location}
+              {props.offer.location.length > 15
+                ? props.offer.location.substring(0, 12) + "..."
+                : props.offer.location}
             </h3>
           </Box>
 
@@ -97,11 +99,34 @@ export function OfferProfile(props) {
             sx={{ gridColumn: "-1/1", marginTop: 0, marginBottom: "0.5rem" }}
           >
             {props.offer.description.length > 30
-              ? props.offer.description.substring(0, 39) + "..."
+              ? props.offer.description.substring(0, 30) + "..."
               : props.offer.description}
           </Typography>
         </Box>
       </Box>
+      <Button
+        variant="contained"
+        sx={{
+          width: "100%",
+          marginTop: "0.5rem",
+          color: "white",
+          fontSize: "1.2rem",
+          borderRadius: "0px 0px 15px 15px",
+          // backgroundColor: "white",
+          backgroundColor: "rgb(0, 107, 141)",
+          boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+          padding: "0.1rem 1rem",
+          alignSelf: "center",
+          boxShadow:
+            "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+          ":hover": {
+            backgroundColor: "#DDD",
+            boxShadow: "none",
+          },
+        }}
+      >
+        Edit
+      </Button>
 
       <ModalEditOffer open={modal} onClose={handleClose} offer={props.offer} />
     </Box>

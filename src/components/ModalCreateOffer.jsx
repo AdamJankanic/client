@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 
 import axiosCongig from "../axiosConfig.js";
+import { LocationAutocomplete } from "./LocationAutocomplete";
 
 const style = {
   position: "absolute",
@@ -109,6 +110,11 @@ export function ModalCreateOffer(props) {
     setOfferTitle(event.target.value);
   };
 
+  const handleSetLocation = (location) => {
+    console.log("location", location);
+    setOfferLocation(location);
+  };
+
   // handle location input
   const handleLocationChange = (event) => {
     setOfferLocation(event.target.value);
@@ -116,7 +122,28 @@ export function ModalCreateOffer(props) {
 
   // handle price input
   const handlePriceChange = (event) => {
-    if (event.target.value >= 0) setOfferPrice(event.target.value);
+    // console.log(event.target.value);
+    // if (offerPrice === "0" && event.target.value !== 0) {
+    //   setOfferPrice("");
+    //   setOfferPrice(event.target.value);
+    //   return;
+    // } else if (event.target.value === "") {
+    //   setOfferPrice(event.target.value);
+    //   return;
+    // }
+    // if (event.target.value >= 0) setOfferPrice(event.target.value);
+    console.log(event.target.value);
+
+    if (event.target.value === "") {
+      setOfferPrice("");
+      return;
+    }
+
+    const newValue = parseInt(event.target.value);
+
+    if (newValue === 0 || newValue <= 9999) {
+      setOfferPrice(newValue.toString());
+    }
   };
 
   // handle description input
@@ -132,8 +159,38 @@ export function ModalCreateOffer(props) {
     setDelivery(event.target.checked);
   };
 
+  function resetForm() {
+    setOfferTitle("");
+    setOfferLocation("");
+    setOfferPrice("");
+    setOfferDescription("");
+    setCategory("");
+    setState("");
+    setDelivery(true);
+    setFile(null);
+    setFileName(null);
+    setFileBase64(null);
+  }
+
+  React.useEffect(() => {
+    resetForm();
+  }, [props.open]);
+
   // create an offer
   const handleCreateOffer = (event) => {
+    if (
+      !offerTitle ||
+      !category ||
+      !state ||
+      !offerLocation ||
+      !offerPrice ||
+      !offerDescription ||
+      !fileBase64
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+
     const newOffer = {
       title: offerTitle,
       category: category,
@@ -151,19 +208,30 @@ export function ModalCreateOffer(props) {
     // dispatch(addOffer(newOffer));
 
     // send offer to server
-    axiosCongig.post("/offer/create", newOffer);
+    axiosCongig
+      .post("/offer/create", newOffer)
+      .then((response) => {
+        alert("Offer created successfully");
+        props.onClose();
+        resetForm();
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error during offer creation");
+      });
 
     // reset form
-    setOfferTitle("");
-    setOfferLocation("");
-    setOfferPrice("");
-    setOfferDescription("");
-    setCategory("");
-    setState("");
-    setDelivery(true);
-    setFile(null);
-    setFileName(null);
-    setFileBase64(null);
+    // setOfferTitle("");
+    // setOfferLocation("");
+    // setOfferPrice("");
+    // setOfferDescription("");
+    // setCategory("");
+    // setState("");
+    // setDelivery(true);
+    // setFile(null);
+    // setFileName(null);
+    // setFileBase64(null);
   };
 
   return (
@@ -202,7 +270,7 @@ export function ModalCreateOffer(props) {
               }}
             />
 
-            <TextField
+            {/* <TextField
               id="filled-basic"
               label="Location"
               variant="filled"
@@ -213,7 +281,9 @@ export function ModalCreateOffer(props) {
               sx={{
                 width: "100%",
               }}
-            />
+            /> */}
+
+            <LocationAutocomplete handleSetLocation={handleSetLocation} />
 
             <TextField
               id="filled-basic"
@@ -316,6 +386,7 @@ export function ModalCreateOffer(props) {
               label="Description"
               variant="filled"
               multiline
+              required
               maxRows={4}
               value={offerDescription}
               onChange={handleDescriptionChange}
@@ -346,7 +417,6 @@ export function ModalCreateOffer(props) {
             }}
             onClick={() => {
               handleCreateOffer();
-              props.onClose();
             }}
           >
             Create

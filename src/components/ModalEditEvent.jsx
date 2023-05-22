@@ -64,6 +64,13 @@ export function ModalEditEvent(props) {
     });
   }
 
+  function deleteEvent() {
+    axiosConfig.delete(`/event/delete/${event.uuid}`).then((res) => {
+      console.log(res.data);
+      window.location.reload();
+    });
+  }
+
   React.useEffect(() => {
     console.log("event detaaaaaails");
     resetToDefaultValues();
@@ -329,32 +336,62 @@ export function ModalEditEvent(props) {
               }}
             />
           </Box>
-
-          <Button
-            variant="contained"
+          <Box
             sx={{
-              width: "100%",
-              marginTop: "0.5rem",
-              color: "white",
-              fontSize: "1.2rem",
-              // backgroundColor: "white",
-              backgroundColor: "rgb(0, 107, 141)",
-              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-              padding: "0.1rem 1rem",
-              alignSelf: "center",
-              boxShadow:
-                "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
-              ":hover": {
-                backgroundColor: "#DDD",
-                boxShadow: "none",
-              },
-            }}
-            onClick={() => {
-              handleUpdateEvent();
+              display: "flex",
+              gap: "0.5rem",
             }}
           >
-            SAVE
-          </Button>
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                marginTop: "0.5rem",
+                color: "white",
+                fontSize: "1.2rem",
+                // backgroundColor: "white",
+                backgroundColor: "rgb(0, 107, 141)",
+                boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+                padding: "0.1rem 1rem",
+                alignSelf: "center",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+                ":hover": {
+                  backgroundColor: "#DDD",
+                  boxShadow: "none",
+                },
+              }}
+              onClick={() => {
+                handleUpdateEvent();
+              }}
+            >
+              SAVE
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                marginTop: "0.5rem",
+                color: "white",
+                fontSize: "1.2rem",
+                // backgroundColor: "white",
+                backgroundColor: "red",
+                boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+                padding: "0.1rem 1rem",
+                alignSelf: "center",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+                ":hover": {
+                  backgroundColor: "#DDD",
+                  boxShadow: "none",
+                },
+              }}
+              onClick={deleteEvent}
+            >
+              DELETE
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </div>

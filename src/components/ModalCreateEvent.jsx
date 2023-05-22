@@ -82,6 +82,23 @@ export function ModalCreateEvent(props) {
     setEventLocation(location);
   };
 
+  function resetForm() {
+    setEventTitle("");
+    setEventLocation("");
+    setEventPrice("");
+    setEventDescription("");
+    setCategory("");
+    setEventDuration(1);
+    setEventCapacity(10);
+    setUnlimitedCapacity(false);
+    setDate(dayjs());
+    setTime(dayjs());
+  }
+
+  React.useEffect(() => {
+    resetForm();
+  }, [props.open]);
+
   // handle duration input
   const handleDurationChange = (event) => {
     if (event.target.value > 0) setEventDuration(event.target.value);
@@ -112,6 +129,20 @@ export function ModalCreateEvent(props) {
 
   // create an event
   const handleCreateEvent = (event) => {
+    if (
+      !eventTitle ||
+      !eventLocation ||
+      !eventPrice ||
+      !eventDescription ||
+      !category ||
+      !eventDuration ||
+      !time ||
+      !date
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+
     const newEvent = {
       title: eventTitle,
       category: category,
@@ -134,19 +165,21 @@ export function ModalCreateEvent(props) {
 
     // dispatch(addEvent(newEvent));
     console.log("new event", newEvent);
-    axiosConfig.post("/event/create", newEvent);
+    axiosConfig
+      .post("/event/create", newEvent)
+      .then((res) => {
+        console.log("res", res);
+        alert("Event created successfully");
+        props.onClose();
+        resetForm();
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log("err", err);
+        alert("Error during event creation");
+      });
 
     // reset form
-    setEventTitle("");
-    setEventLocation("");
-    setEventPrice("");
-    setEventDescription("");
-    setCategory("");
-    setEventDuration(1);
-    setEventCapacity(10);
-    setUnlimitedCapacity(false);
-    setDate(dayjs());
-    setTime(dayjs());
   };
 
   return (
@@ -317,7 +350,6 @@ export function ModalCreateEvent(props) {
             }}
             onClick={() => {
               handleCreateEvent();
-              props.onClose();
             }}
           >
             Create

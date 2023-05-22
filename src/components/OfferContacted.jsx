@@ -9,35 +9,34 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { useDispatch, useSelector } from "react-redux";
 import { setOfferDetailId, setOfferDetailModal } from "../reducers/Offers.js";
+import axiosConfig from "../axiosConfig";
 
-export function Offer(props) {
-  const dispatch = useDispatch();
+export function OfferContacted(props) {
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleOfferClick = (offer) => {
-    console.log(offer);
-    dispatch(setOfferDetailId(offer.uuid));
-    dispatch(setOfferDetailModal());
-  };
+  function leaveOffer() {
+    console.log("leaveOffer");
+    axiosConfig
+      .post("/offer/leave", {
+        user_uuid: user.uuid,
+        offer_uuid: props.offer.uuid,
+      })
+      .then((response) => {
+        console.log(response);
+        alert("You have left the offer!");
+        window.location.reload();
+      });
+  }
 
   return (
     <Box
       sx={{
-        // border: "1px solid black",
-
-        // width: "25%",
-        // height: "15rem",
-        // margin: "auto",
-        // marginTop: "2rem",
-        // height: "25rem",
         cursor: "pointer",
         margin: "0.5rem",
         borderRadius: "15px",
         overflow: "hidden",
         boxShadow:
           "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
-      }}
-      onClick={() => {
-        handleOfferClick(props.offer);
       }}
     >
       <img
@@ -51,7 +50,7 @@ export function Offer(props) {
           padding: 0,
         }}
       ></img>
-      {/* <img src={props.offer.image} alt="offer file" /> */}
+
       <Box sx={{ padding: "0.25rem" }}>
         <Box
           sx={{
@@ -106,7 +105,31 @@ export function Offer(props) {
           </Typography>
         </Box>
       </Box>
-      {/* <Button sx={{ width: "100%", height: "3rem" }}>Contact user</Button> */}
+
+      <Button
+        variant="contained"
+        sx={{
+          width: "100%",
+          marginTop: "0.5rem",
+          color: "white",
+          fontSize: "1.2rem",
+          borderRadius: "0px 0px 15px 15px",
+          // backgroundColor: "white",
+          backgroundColor: "red",
+          boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+          padding: "0.1rem 1rem",
+          alignSelf: "center",
+          boxShadow:
+            "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+          ":hover": {
+            backgroundColor: "#DDD",
+            boxShadow: "none",
+          },
+        }}
+        onClick={leaveOffer}
+      >
+        Leave
+      </Button>
     </Box>
   );
 }

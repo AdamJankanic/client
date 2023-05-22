@@ -30,11 +30,11 @@ async function checkAuth() {
       // refresh token is still valid, request new access token
       try {
         const response = await axios
-          // .get(
-          // "http://127.0.0.1:5000/api/user/refresh",
-          // {
-          //   withCredentials: true,
-          // }
+          //   .get(
+          //   "http://127.0.0.1:5000/api/user/refresh",
+          //   {
+          //     withCredentials: true,
+          //   }
           // );
           .get(
             "https://server-production-412a.up.railway.app/api/user/refresh",

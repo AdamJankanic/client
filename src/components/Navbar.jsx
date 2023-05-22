@@ -43,12 +43,12 @@ export function Navbar() {
       });
     } else if (event.target.innerText === "My account") {
       navigate("/profile");
-    } else if (event.target.innerText === "Chat") {
+    } else if (event.target.innerText === "CHAT") {
       navigate("/");
       // joinChats(user.uuid);
-    } else if (event.target.innerText === "Marketplace") {
+    } else if (event.target.innerText === "MARKETPLACE") {
       navigate("/market");
-    } else if (event.target.innerText === "Events") {
+    } else if (event.target.innerText === "EVENTS") {
       navigate("/events");
     }
   };
@@ -101,7 +101,7 @@ export function Navbar() {
             }}
             onClick={handlePageChange}
           >
-            Chat
+            CHAT
           </Typography>
           <Typography
             sx={{
@@ -113,7 +113,7 @@ export function Navbar() {
             }}
             onClick={handlePageChange}
           >
-            Marketplace
+            MARKETPLACE
           </Typography>
           <Typography
             sx={{
@@ -125,7 +125,7 @@ export function Navbar() {
             }}
             onClick={handlePageChange}
           >
-            Events
+            EVENTS
           </Typography>
         </Box>
         {/* right side */}

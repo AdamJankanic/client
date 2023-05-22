@@ -201,7 +201,9 @@ export function Test() {
     const newMessage = {
       id: uuidv4(),
       sender_uuid: user.uuid,
+      User: { username: user.username },
       content: text.trim(),
+      createdAt: new Date().toISOString(),
     };
 
     console.log("dispatched message");

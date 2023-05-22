@@ -12,6 +12,8 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import axiosConfig from "../axiosConfig";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -43,6 +45,28 @@ export function ModalOfferDetail(props) {
   if (selectedId == null) {
     return null;
   }
+
+  const handleContactSeller = (event) => {
+    console.log("handleContactSeller");
+
+    axiosConfig
+      .post("/offer/contact", {
+        offer_uuid: selectedOffer.uuid,
+        user_uuid: user.uuid,
+      })
+      .then((response) => {
+        console.log(response);
+        alert("Seller has been contacted! Chat has been created.");
+      })
+      .catch((error) => {
+        if (error.response.status === 435) {
+          alert("You have already contacted this seller!");
+          return;
+        }
+        console.log(error);
+        alert("Error contacting seller!");
+      });
+  };
 
   return (
     <div>
@@ -150,6 +174,7 @@ export function ModalOfferDetail(props) {
                 boxShadow: "none",
               },
             }}
+            onClick={handleContactSeller}
           >
             Contact Seller
           </Button>

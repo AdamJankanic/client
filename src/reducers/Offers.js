@@ -116,6 +116,7 @@ const offersSlice = createSlice({
   initialState: {
     allOffers: [],
     myOffers: [],
+    contactedOffers: [],
     offerDetailId: null,
     offerDetailModal: false,
   },
@@ -133,9 +134,14 @@ const offersSlice = createSlice({
       );
     },
 
+    contactOffers: (state, action) => {
+      state.contactedOffers.push(action.payload);
+    },
+
     clearOffers: (state) => {
       state.allOffers = [];
       state.myOffers = [];
+      state.contactedOffers = [];
     },
 
     setOfferDetailId: (state, action) => {
@@ -155,5 +161,6 @@ export const {
   setOfferDetailModal,
   clearOffers,
   myOffers,
+  contactOffers,
 } = offersSlice.actions;
 export default offersSlice.reducer;

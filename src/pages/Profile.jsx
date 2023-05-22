@@ -7,16 +7,19 @@ import {
   Grid,
   TextField,
   Toolbar,
+  Typography,
 } from "@mui/material";
 import { Navbar } from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axiosConfig from "../axiosConfig.js";
-import { myEvents, clearStore } from "../reducers/Events";
-import { myOffers, clearOffers } from "../reducers/Offers";
+import { myEvents, clearStore, joinEvent } from "../reducers/Events";
+import { myOffers, clearOffers, contactOffers } from "../reducers/Offers";
 
 import { EventProfile } from "../components/EventProfile";
+import { EventJoined } from "../components/EventJoined";
 import { OfferProfile } from "../components/OfferProfile";
+import { OfferContacted } from "../components/OfferContacted";
 
 const activeDesign = {
   width: "90%",
@@ -69,6 +72,18 @@ const buttonDesign = {
   },
 };
 
+const profileText = {
+  fontWeight: "bold",
+  fontSize: "1.5rem",
+  textDecoration: "underline",
+};
+
+const profileValue = {
+  fontSize: "1.2rem",
+  fontWeight: "normal",
+  fontWeight: "bold",
+};
+
 export function Profile() {
   const [activeButton, setActiveButton] = React.useState("myProfile");
   const dispatch = useDispatch();
@@ -81,13 +96,43 @@ export function Profile() {
     window.location.href = "/signin";
   }
 
+  async function getJoinedEvents() {
+    axiosConfig
+      .get(`/event/joined/${user.uuid}`)
+      .then((res) => {
+        console.log("joined events");
+        console.log(res.data);
+        res.data.forEach((event) => {
+          dispatch(joinEvent(event));
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 434) navigate("/verify");
+      });
+  }
+
+  //get contacted offers
+  async function getContactedOffers() {
+    axiosConfig
+      .get(`/offer/contacted/${user.uuid}`)
+      .then((res) => {
+        console.log("contacted offers");
+        console.log(res.data);
+        res.data.forEach((offer) => {
+          dispatch(contactOffers(offer));
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 434) navigate("/verify");
+      });
+  }
+
   async function getMyEvents() {
     axiosConfig
       .get(`/event/myevents/${user.uuid}`)
       .then((res) => {
-        dispatch(clearStore());
-        // console.log("my events");
-        // console.log(res.data);
         res.data.forEach((event) => {
           dispatch(myEvents(event));
         });
@@ -101,9 +146,6 @@ export function Profile() {
     axiosConfig
       .get(`/offer/myoffers/${user.uuid}`)
       .then((res) => {
-        dispatch(clearOffers());
-        // console.log("my events");
-        // console.log(res.data);
         res.data.forEach((offer) => {
           dispatch(myOffers(offer));
         });
@@ -115,12 +157,18 @@ export function Profile() {
   }
 
   React.useEffect(() => {
+    dispatch(clearStore());
+    dispatch(clearOffers());
     getMyEvents();
     getMyOffers();
+    getJoinedEvents();
+    getContactedOffers();
   }, []);
 
   const events = selector.eventsStore.myEvents;
+  const joinedEvents = selector.eventsStore.joinedEvents;
   const offers = selector.offersStore.myOffers;
+  const contactedOffers = selector.offersStore.contactedOffers;
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -205,6 +253,15 @@ export function Profile() {
           >
             Joined events
           </Button>
+          <Button
+            variant="contained"
+            sx={activeButton === "reactedOffers" ? activeDesign : buttonDesign}
+            onClick={() => {
+              setActiveButton("reactedOffers");
+            }}
+          >
+            Reacted offers
+          </Button>
         </Box>
       </Drawer>
 
@@ -214,8 +271,8 @@ export function Profile() {
           padding: 0,
           flexGrow: 1,
           p: 3,
-          height: "91vh",
-          maxHeight: "91vh",
+          height: "100vh",
+          maxHeight: "100vh",
           overflow: "auto",
           display: "flex",
           flexDirection: "column",
@@ -226,12 +283,98 @@ export function Profile() {
         <Box
           sx={{
             display: activeButton === "myProfile" ? "flex" : "none",
-            justifyContent: "space-between",
+            flexDirection: "column",
+
             alignItems: "center",
-            width: "100%",
+            width: "50%",
+            border: "1px solid rgba(0, 107, 141, 1)",
+            borderRadius: "15px",
+            borderWidth: "5px",
+            padding: "1rem",
           }}
         >
-          <p>{JSON.stringify(user)}</p>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+              gap: "2rem",
+            }}
+          >
+            <h1
+              style={{
+                margin: 0,
+              }}
+            >
+              My Profile
+            </h1>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                backgroundColor: "rgba(0, 107, 141, 0.2)",
+                padding: "0.5rem",
+                borderRadius: "15px",
+              }}
+            >
+              <Typography sx={profileText}>Username:</Typography>
+              <Typography sx={profileValue}>{user.username}</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                backgroundColor: "rgba(0, 107, 141, 0.2)",
+                padding: "0.5rem",
+                borderRadius: "15px",
+              }}
+            >
+              <Typography sx={profileText}>Email:</Typography>
+              <Typography sx={profileValue}>{user.email}</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  backgroundColor: user.verified ? "green" : "red",
+                  padding: "0.5rem",
+                  borderRadius: "15px",
+                  color: "white",
+                }}
+              >
+                {user.verified ? "Verified" : "Non verified"}
+              </Typography>
+            </Box>
+          </Box>
+          <Button
+            variant="contained"
+            sx={{
+              width: "50%",
+              marginTop: "1rem",
+              color: "white",
+              fontSize: "1.2rem",
+              // backgroundColor: "white",
+              backgroundColor: "rgb(0, 107, 141)",
+              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+              padding: "0.1rem 1rem",
+              // alignSelf: "center",
+              boxShadow:
+                "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+              ":hover": {
+                backgroundColor: "#DDD",
+                boxShadow: "none",
+              },
+            }}
+          >
+            Edit profile
+          </Button>
         </Box>
         <Box
           sx={{
@@ -273,7 +416,30 @@ export function Profile() {
             width: "100%",
           }}
         >
-          <p>Joined Events</p>
+          <Grid container spacing={4}>
+            {joinedEvents.map((event, index) => (
+              <Grid key={index} item lg={4} sm={6} xs={12}>
+                <EventJoined key={index} event={event} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        <Box
+          sx={{
+            display: activeButton === "reactedOffers" ? "flex" : "none",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Grid container spacing={4}>
+            {contactedOffers.map((offer, index) => (
+              <Grid key={index} item lg={4} sm={6} xs={12}>
+                <OfferContacted key={index} offer={offer} />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       </Box>
     </Box>

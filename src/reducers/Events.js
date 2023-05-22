@@ -41,6 +41,6 @@ const eventsSlice = createSlice({
   },
 });
 
-export const { addEvent, deleteEvent, clearStore, myEvents } =
+export const { addEvent, deleteEvent, clearStore, myEvents, joinEvent } =
   eventsSlice.actions;
 export default eventsSlice.reducer;
