@@ -15,6 +15,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 
 import SendIcon from "@mui/icons-material/Send";
 import AddIcon from "@mui/icons-material/Add";
+import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import Avatar from "@mui/material/Avatar";
 // import ScrollToBottom from "react-scroll-to-bottom";
@@ -47,6 +48,7 @@ import {
   sendMessageToServer,
 } from "../websocket.js";
 
+import { useMediaQuery } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
 const useChannel = {
@@ -159,7 +161,6 @@ export function Test() {
   });
 
   displayChannels = displayChannels.filter((channel) => {
-    console.log("kaaaaanaaaaaal", channel);
     const channelName = channel.Event?.title || channel.Offer?.title;
     if (searchText === "") {
       return channel;
@@ -170,17 +171,18 @@ export function Test() {
 
   // active channel
   function clickedChannel(id) {
+    let isConnectedToChannel = false;
     console.log("active channel: " + id);
-
+    setDrawerOpen(false);
     console.log("joined websockets: " + joinedWebsocket);
     console.log("idecko: " + id);
     if (joinedWebsocket.includes(id)) {
       dispatch(activeChannel(id));
-      return;
+      isConnectedToChannel = true;
     }
 
     dispatch(addWebsocket(id));
-    connectToChannelNamespace(id);
+    connectToChannelNamespace(id, isConnectedToChannel);
 
     dispatch(activeChannel(id));
   }
@@ -226,26 +228,43 @@ export function Test() {
     scrollToBottom();
   }, [fetchedMessages]);
 
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
+  const channelDrawer = useMediaQuery("(min-width: 645px)");
+  const isMobile = useMediaQuery("(max-width: 520px)");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
   return (
     <Box
       sx={{ display: "flex" }}
       // onClick={() => (modal ? setModal(!modal) : null)}
     >
       <CssBaseline />
+      <MenuIcon
+        style={{
+          position: "fixed",
+          top: "1rem",
+          left: "1rem",
+          display: isDesktop ? "none" : "block",
+          color: "white",
+          zIndex: 10000,
+        }}
+        onClick={() => setDrawerOpen(!drawerOpen)}
+      />
       <Navbar />
 
       {/* left drawer */}
       <Drawer
-        variant="permanent"
+        variant={isDesktop ? "permanent" : "temporary"}
         sx={{
-          width: "20%",
+          width: isDesktop ? "20%" : channelDrawer ? "40%" : "75%",
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
-            width: "20%",
+            width: isDesktop ? "20%" : channelDrawer ? "40%" : "75%",
             boxSizing: "border-box",
           },
         }}
         anchor="left"
+        open={drawerOpen}
       >
         <Toolbar />
         <Box
@@ -356,7 +375,6 @@ export function Test() {
         <Toolbar />
         {/* <Message messages={messages[0]} /> */}
         {fetchedMessages.map((message, index) => {
-          console.log("SPRAVA", message);
           return <Message key={index} messages={message} />;
         })}
         {/* <Message /> */}
@@ -385,10 +403,10 @@ export function Test() {
         name="messageInput"
         // autoFocus
         sx={{
-          // backgroundColor: "#EDEDED",
-          width: "80%",
+          backgroundColor: "white",
+          width: isDesktop ? "80%" : "100%",
           position: "fixed",
-          left: "20%",
+          left: isDesktop ? "20%" : "0%",
           bottom: 0,
         }}
       ></TextField>

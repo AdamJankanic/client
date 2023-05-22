@@ -77,6 +77,7 @@ export function Message(props) {
             sx={{
               color:
                 user.uuid === props.messages.sender_uuid ? "white" : "black",
+              wordWrap: "break-word",
             }}
           >
             {props.messages.content}

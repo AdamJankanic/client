@@ -11,7 +11,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PaymentsIcon from "@mui/icons-material/Payments";
 
 import { useDispatch, useSelector } from "react-redux";
-
+import { useMediaQuery } from "@mui/material";
 import axiosConfig from "../axiosConfig";
 
 const style = {
@@ -32,6 +32,9 @@ const style = {
 
 export function ModalOfferDetail(props) {
   const dispatch = useDispatch();
+
+  const isMedium = useMediaQuery("(max-width: 700px)");
+  const isSmall = useMediaQuery("(max-width: 480px)");
 
   const selector = useSelector((state) => state);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -77,13 +80,29 @@ export function ModalOfferDetail(props) {
         aria-describedby="modal-modal-description"
       >
         {/* diplaying offer content */}
-        <Box sx={style}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: isSmall ? "95%" : isMedium ? "80%" : "40rem",
+
+            bgcolor: "background.paper",
+            // border: "1px solid #000",
+            boxShadow: 24,
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "10px",
+          }}
+        >
           <img
             src={selectedOffer.image}
             alt="offer file"
             style={{
               width: "100%",
-              height: "20rem",
+              height: isSmall ? "10rem" : isMedium ? "15rem" : "20rem",
               objectFit: "fit",
               margin: 0,
               padding: 0,

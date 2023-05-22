@@ -36,6 +36,7 @@ import "moment-timezone"; // Import Moment.js timezone
 import axiosConfig from "../axiosConfig.js";
 
 import { LocationAutocomplete } from "./LocationAutocomplete.jsx";
+import { useMediaQuery } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -170,7 +171,7 @@ export function ModalEditEvent(props) {
       !updateEvent.category ||
       !updateEvent.description ||
       (!updateEvent.capacity && updateEvent.capacity !== 0) ||
-      !updateEvent.price ||
+      (!updateEvent.price && updateEvent.price !== 0) ||
       !updateEvent.location ||
       !updateEvent.time ||
       !updateEvent.duration ||
@@ -190,6 +191,9 @@ export function ModalEditEvent(props) {
     props.onClose();
   };
 
+  const isMedium = useMediaQuery("(max-width: 700px)");
+  const isSmall = useMediaQuery("(max-width: 480px)");
+
   return (
     <div>
       <Modal
@@ -198,7 +202,22 @@ export function ModalEditEvent(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: isSmall ? "95%" : isMedium ? "80%" : "40rem",
+            bgcolor: "background.paper",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "10px",
+          }}
+        >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <strong>Create a new event</strong>
           </Typography>
@@ -206,7 +225,11 @@ export function ModalEditEvent(props) {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isSmall
+                ? "8rem 8rem"
+                : isMedium
+                ? "11rem 11rem"
+                : "1fr 1fr",
               columnGap: "1rem",
               rowGap: "0.5rem",
               justifyContent: "center",

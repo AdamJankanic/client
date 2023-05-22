@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import * as React from "react";
@@ -53,6 +54,8 @@ export function Navbar() {
     }
   };
 
+  const isMobile = useMediaQuery("(max-width: 520px)");
+
   return (
     <AppBar
       position="fixed"
@@ -85,7 +88,8 @@ export function Navbar() {
         {/* middle */}
         <Box
           sx={{
-            display: "flex",
+            display: isMobile ? "none" : "flex",
+
             alignItems: "center",
             justifyContent: "center",
             gap: "2rem",
@@ -163,6 +167,30 @@ export function Navbar() {
             open={Boolean(anchorEl)}
             onClose={handleCloseProfileMenu}
           >
+            <MenuItem
+              sx={{
+                display: isMobile ? "flex" : "none",
+              }}
+              onClick={handleCloseProfileMenu}
+            >
+              <Typography onClick={handlePageChange}>CHAT</Typography>
+            </MenuItem>
+            <MenuItem
+              sx={{
+                display: isMobile ? "flex" : "none",
+              }}
+              onClick={handleCloseProfileMenu}
+            >
+              <Typography onClick={handlePageChange}>MARKETPLACE</Typography>
+            </MenuItem>
+            <MenuItem
+              sx={{
+                display: isMobile ? "flex" : "none",
+              }}
+              onClick={handleCloseProfileMenu}
+            >
+              <Typography onClick={handlePageChange}>EVENTS</Typography>
+            </MenuItem>
             <MenuItem onClick={handleCloseProfileMenu}>
               <Typography onClick={handlePageChange}>My account</Typography>
             </MenuItem>

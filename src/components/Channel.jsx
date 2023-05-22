@@ -66,8 +66,8 @@ export function Channel(props) {
             color: activeChannel === channel.uuid ? "#fff" : "black",
           }}
         >
-          {channelName.length > 12
-            ? channelName.substring(0, 10) + "..."
+          {channelName.length > 10
+            ? channelName.substring(0, 5) + "..."
             : channelName}
         </Typography>
         <Typography

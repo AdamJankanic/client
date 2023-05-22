@@ -58,7 +58,7 @@ async function getToken() {
   return token;
 }
 
-async function connectToChannelNamespace(channelId) {
+async function connectToChannelNamespace(channelId, connect) {
   const token = await getToken();
 
   console.log("TOKEN", token);
@@ -77,20 +77,28 @@ async function connectToChannelNamespace(channelId) {
     }
   );
 
-  newSocket.on("connect", () => {
-    console.log("Connected to Channel Namespace", channelId);
-  });
+  if (!connect) {
+    newSocket.on("connect", () => {
+      console.log("Connected to Channel Namespace", channelId);
+    });
 
-  newSocket.on("disconnect", () => {
-    console.log("Disconnected from Channel Namespace", channelId);
-  });
+    newSocket.on("disconnect", () => {
+      console.log("Disconnected from Channel Namespace", channelId);
+    });
 
-  newSocket.on("receive_message", (message) => {
-    console.log("Received message:", message);
-    const dispatch = store.dispatch;
-
-    dispatch(addMessage(message));
-  });
+    newSocket.on("receive_message", (message) => {
+      console.log("Received message:", message);
+      const dispatch = store.dispatch;
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log("USER", user.uuid);
+      console.log("MESSAGE SENDER", message.sender_uuid);
+      console.log("TRUE/FALSE", message.sender_uuid !== user.uuid);
+      if (user.uuid !== message.sender_uuid) {
+        console.log("CONDITION TRUE");
+        dispatch(addMessage(message));
+      }
+    });
+  }
 }
 
 // send message to server through websocket

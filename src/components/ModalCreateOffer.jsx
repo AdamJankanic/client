@@ -25,20 +25,21 @@ import {
 
 import axiosCongig from "../axiosConfig.js";
 import { LocationAutocomplete } from "./LocationAutocomplete";
+import { useMediaQuery } from "@mui/material";
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
-  boxShadow: 24,
-  p: 4,
-  display: "flex",
-  flexDirection: "column",
-  borderRadius: "10px",
+  // position: "absolute",
+  // top: "50%",
+  // left: "50%",
+  // transform: "translate(-50%, -50%)",
+  // width: isSmall ? "95%" : isMedium ? "80%" : "40rem",
+  // bgcolor: "background.paper",
+  // border: "1px solid #000",
+  // boxShadow: 24,
+  // p: 4,
+  // display: "flex",
+  // flexDirection: "column",
+  // borderRadius: "10px",
 };
 
 export function ModalCreateOffer(props) {
@@ -234,6 +235,9 @@ export function ModalCreateOffer(props) {
     // setFileBase64(null);
   };
 
+  const isMedium = useMediaQuery("(max-width: 700px)");
+  const isSmall = useMediaQuery("(max-width: 480px)");
+
   return (
     <div>
       <Modal
@@ -242,7 +246,22 @@ export function ModalCreateOffer(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: isSmall ? "95%" : isMedium ? "80%" : "40rem",
+            bgcolor: "background.paper",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "10px",
+          }}
+        >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <strong>Create a new offer</strong>
           </Typography>
@@ -250,7 +269,11 @@ export function ModalCreateOffer(props) {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isSmall
+                ? "8rem 8rem"
+                : isMedium
+                ? "11rem 11rem"
+                : "1fr 1fr",
               columnGap: "1rem",
               rowGap: "0.5rem",
               justifyContent: "center",
@@ -367,10 +390,12 @@ export function ModalCreateOffer(props) {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "2rem",
+                  gap: isSmall ? "0" : "2rem",
                 }}
               >
-                <Typography sx={{ alignSelf: "center" }}>{fileName}</Typography>
+                <Typography sx={{ alignSelf: "center" }}>
+                  {isSmall ? fileName.substring(0, 5) + "..." : fileName}
+                </Typography>
                 <IconButton onClick={handleDeleteFile}>
                   <CloseIcon
                     sx={{

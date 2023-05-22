@@ -36,6 +36,7 @@ import "moment-timezone"; // Import Moment.js timezone
 import axiosConfig from "../axiosConfig.js";
 
 import { LocationAutocomplete } from "./LocationAutocomplete.jsx";
+import { useMediaQuery } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -182,6 +183,9 @@ export function ModalCreateEvent(props) {
     // reset form
   };
 
+  const isMedium = useMediaQuery("(max-width: 700px)");
+  const isSmall = useMediaQuery("(max-width: 480px)");
+
   return (
     <div>
       <Modal
@@ -190,7 +194,23 @@ export function ModalCreateEvent(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: isSmall ? "95%" : isMedium ? "80%" : "40rem",
+            bgcolor: "background.paper",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "10px",
+            overflow: "scroll",
+          }}
+        >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <strong>Create a new event</strong>
           </Typography>
@@ -198,7 +218,11 @@ export function ModalCreateEvent(props) {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isSmall
+                ? "8rem 8rem"
+                : isMedium
+                ? "11rem 11rem"
+                : "1fr 1fr",
               columnGap: "1rem",
               rowGap: "0.5rem",
               justifyContent: "center",
@@ -213,30 +237,12 @@ export function ModalCreateEvent(props) {
               value={eventTitle}
               onChange={handleEventTitleChange}
               sx={{
-                width: "100%",
+                width: "auto",
                 gridColumn: "-1/1",
               }}
             />
 
             <LocationAutocomplete handleSetLocation={handleSetLocation} />
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Date"
-                value={date}
-                format="DD/MM/YYYY"
-                required
-                onChange={(newValue) => setDate(newValue)}
-              />
-
-              <TimeField
-                label="Time"
-                value={time}
-                onChange={(newValue) => setTime(newValue)}
-                format="HH:mm"
-                required
-              />
-            </LocalizationProvider>
 
             <TextField
               id="filled-basic"
@@ -251,6 +257,30 @@ export function ModalCreateEvent(props) {
                 width: "100%",
               }}
             />
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date"
+                value={date}
+                format="DD/MM/YYYY"
+                required
+                onChange={(newValue) => setDate(newValue)}
+                sx={{
+                  width: "100%",
+                }}
+              />
+
+              <TimeField
+                label="Time"
+                value={time}
+                onChange={(newValue) => setTime(newValue)}
+                format="HH:mm"
+                required
+                sx={{
+                  width: "100%",
+                }}
+              />
+            </LocalizationProvider>
 
             <TextField
               id="filled-basic"

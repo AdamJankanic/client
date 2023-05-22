@@ -8,6 +8,7 @@ import {
   TextField,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Navbar } from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,8 @@ import { EventProfile } from "../components/EventProfile";
 import { EventJoined } from "../components/EventJoined";
 import { OfferProfile } from "../components/OfferProfile";
 import { OfferContacted } from "../components/OfferContacted";
+
+import MenuIcon from "@mui/icons-material/Menu";
 
 const activeDesign = {
   width: "90%",
@@ -170,25 +173,41 @@ export function Profile() {
   const offers = selector.offersStore.myOffers;
   const contactedOffers = selector.offersStore.contactedOffers;
 
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const isDesktop = useMediaQuery("(min-width: 1040px)");
+  const isMobile = useMediaQuery("(max-width: 520px)");
+  const textBreak = useMediaQuery("(max-width: 420px)");
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-
+      <MenuIcon
+        style={{
+          position: "fixed",
+          top: "1rem",
+          left: "1rem",
+          display: isDesktop ? "none" : "block",
+          color: "white",
+          zIndex: 10000,
+        }}
+        onClick={() => setDrawerOpen(!drawerOpen)}
+      />
       <Navbar />
       {/* ---------------------------------------------------------------------------- */}
       {/* left drawer */}
       <Drawer
-        variant="permanent"
+        variant={isDesktop ? "permanent" : "temporary"}
         sx={{
-          width: "20%",
+          width: isDesktop ? "20%" : isMobile ? "75%" : "40%",
           flexShrink: 0,
           // boxSizing: "border-box",
           [`& .MuiDrawer-paper`]: {
-            width: "20%",
+            width: isDesktop ? "20%" : isMobile ? "75%" : "40%",
             boxSizing: "border-box",
           },
         }}
         anchor="left"
+        open={drawerOpen}
       >
         <Toolbar />
         <Box
@@ -202,7 +221,7 @@ export function Profile() {
             marginTop: "0.2rem",
           }}
         >
-          <TextField
+          {/* <TextField
             variant="standard"
             // value={searchText}
             // onChange={handleSearchChange}
@@ -213,13 +232,14 @@ export function Profile() {
               height: "1rem",
               marginBottom: "1rem",
             }}
-          ></TextField>
+          ></TextField> */}
 
           <Button
             variant="contained"
             sx={activeButton === "myProfile" ? activeDesign : buttonDesign}
             onClick={() => {
               setActiveButton("myProfile");
+              setDrawerOpen(false);
             }}
           >
             My profile
@@ -230,6 +250,7 @@ export function Profile() {
             sx={activeButton === "myOffers" ? activeDesign : buttonDesign}
             onClick={() => {
               setActiveButton("myOffers");
+              setDrawerOpen(false);
             }}
           >
             My offers
@@ -240,6 +261,7 @@ export function Profile() {
             sx={activeButton === "myEvents" ? activeDesign : buttonDesign}
             onClick={() => {
               setActiveButton("myEvents");
+              setDrawerOpen(false);
             }}
           >
             My events
@@ -249,6 +271,7 @@ export function Profile() {
             sx={activeButton === "joinedEvents" ? activeDesign : buttonDesign}
             onClick={() => {
               setActiveButton("joinedEvents");
+              setDrawerOpen(false);
             }}
           >
             Joined events
@@ -258,6 +281,7 @@ export function Profile() {
             sx={activeButton === "reactedOffers" ? activeDesign : buttonDesign}
             onClick={() => {
               setActiveButton("reactedOffers");
+              setDrawerOpen(false);
             }}
           >
             Reacted offers
@@ -270,7 +294,6 @@ export function Profile() {
           margin: 0,
           padding: 0,
           flexGrow: 1,
-          p: 3,
           height: "100vh",
           maxHeight: "100vh",
           overflow: "auto",
@@ -284,9 +307,9 @@ export function Profile() {
           sx={{
             display: activeButton === "myProfile" ? "flex" : "none",
             flexDirection: "column",
-
+            alignSelf: "center",
             alignItems: "center",
-            width: "50%",
+            width: isDesktop ? "80%" : isMobile ? "100%" : "80%",
             border: "1px solid rgba(0, 107, 141, 1)",
             borderRadius: "15px",
             borderWidth: "5px",
@@ -297,7 +320,7 @@ export function Profile() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "start",
+              alignItems: textBreak ? "center" : "flex-start",
               gap: "2rem",
             }}
           >
@@ -312,6 +335,7 @@ export function Profile() {
             <Box
               sx={{
                 display: "flex",
+                flexDirection: textBreak ? "column" : "row",
                 alignItems: "center",
                 gap: "1rem",
                 backgroundColor: "rgba(0, 107, 141, 0.2)",
@@ -326,6 +350,7 @@ export function Profile() {
               sx={{
                 display: "flex",
                 alignItems: "center",
+                flexDirection: textBreak ? "column" : "row",
                 gap: "1rem",
                 backgroundColor: "rgba(0, 107, 141, 0.2)",
                 padding: "0.5rem",

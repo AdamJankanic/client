@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu";
 import { Offer } from "../components/Offer";
 import { ModalCreateOffer } from "../components/ModalCreateOffer";
 import { ModalOfferDetail } from "../components/ModalOfferDetail";
@@ -37,6 +38,7 @@ import {
 } from "../reducers/Offers.js";
 
 import axiosConfig from "../axiosConfig.js";
+import { useMediaQuery } from "@mui/material";
 
 export function Marketplace() {
   // getting user location
@@ -166,29 +168,50 @@ export function Marketplace() {
     dispatch(setOfferDetailModal());
   };
 
+  const categoryCheckboxes = useMediaQuery("(min-width: 1175px)");
+  const isDesktop = useMediaQuery("(min-width: 1040px)");
+  const isMobile = useMediaQuery("(max-width: 520px)");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    console.log("isDesktop: " + isDesktop);
+    setDrawerOpen(false);
+  }, [isDesktop]);
+
   return (
     <Box
       sx={{ display: "flex" }}
       // onClick={() => (modal ? setModal(!modal) : null)}
     >
       <CssBaseline />
-
+      <MenuIcon
+        style={{
+          position: "fixed",
+          top: "1rem",
+          left: "1rem",
+          display: isDesktop ? "none" : "block",
+          color: "white",
+          zIndex: 10000,
+        }}
+        onClick={() => setDrawerOpen(!drawerOpen)}
+      />
       <Navbar />
 
       {/* ---------------------------------------------------------------------------- */}
       {/* left drawer */}
       <Drawer
-        variant="permanent"
+        variant={isDesktop ? "permanent" : "temporary"}
         sx={{
-          width: "20%",
+          width: isDesktop ? "20%" : isMobile ? "75%" : "40%",
           flexShrink: 0,
           // boxSizing: "border-box",
           [`& .MuiDrawer-paper`]: {
-            width: "20%",
+            width: isDesktop ? "20%" : isMobile ? "75%" : "40%",
             boxSizing: "border-box",
           },
         }}
         anchor="left"
+        open={drawerOpen}
       >
         <Toolbar />
         <Box
@@ -223,7 +246,14 @@ export function Marketplace() {
             }}
           ></TextField>
 
-          <Box sx={{ display: "flex", gap: "1rem" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: categoryCheckboxes || !isDesktop ? "1rem" : 0,
+              flexDirection:
+                categoryCheckboxes || !isDesktop ? "row" : "column",
+            }}
+          >
             <FormGroup>
               <FormControlLabel
                 control={
@@ -244,26 +274,6 @@ export function Marketplace() {
                   />
                 }
                 label="Clothes"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={filter.books}
-                    onChange={handleFilterChange}
-                    name="books"
-                  />
-                }
-                label="Books"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={filter.automobile}
-                    onChange={handleFilterChange}
-                    name="automobile"
-                  />
-                }
-                label="Automobile"
               />
             </FormGroup>
             <FormGroup>
@@ -286,26 +296,6 @@ export function Marketplace() {
                   />
                 }
                 label="Furniture"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={filter.other}
-                    onChange={handleFilterChange}
-                    name="other"
-                  />
-                }
-                label="Other"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={filter.services}
-                    onChange={handleFilterChange}
-                    name="services"
-                  />
-                }
-                label="Services"
               />
             </FormGroup>
           </Box>
@@ -339,10 +329,10 @@ export function Marketplace() {
         </Box>
       </Drawer>
 
-      {/* Content Events */}
+      {/* Content Offers */}
       <Box
         sx={{
-          width: "80%",
+          width: isDesktop ? "80%" : "100%",
         }}
       >
         <Toolbar />

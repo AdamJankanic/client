@@ -9,7 +9,7 @@ import parse from "autosuggest-highlight/parse";
 import { debounce } from "@mui/material/utils";
 
 import { useJsApiLoader } from "@react-google-maps/api";
-
+import { useMediaQuery } from "@mui/material";
 // This key was created specifically for the demo in mui.com.
 // You need to create a new one for your application.
 const GOOGLE_MAPS_API_KEY = "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo";
@@ -98,10 +98,13 @@ export function LocationAutocomplete({ handleSetLocation }) {
     };
   }, [value, inputValue, fetch]);
 
+  const isMedium = useMediaQuery("(max-width: 700px)");
+  const isSmall = useMediaQuery("(max-width: 480px)");
+
   return (
     <Autocomplete
       id="google-map-demo"
-      sx={{ width: 300 }}
+      sx={{ width: isSmall ? "8rem" : isMedium ? "11rem" : 300 }}
       getOptionLabel={(option) =>
         typeof option === "string" ? option : option.description
       }

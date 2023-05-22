@@ -165,7 +165,7 @@ export function Events() {
   };
 
   const isDesktop = useMediaQuery("(min-width: 1040px)");
-
+  const isMobile = useMediaQuery("(max-width: 520px)");
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -193,11 +193,11 @@ export function Events() {
       <Drawer
         variant={isDesktop ? "permanent" : "temporary"}
         sx={{
-          width: isDesktop ? "20%" : "40%",
+          width: isDesktop ? "20%" : isMobile ? "75%" : "40%",
           flexShrink: 0,
           // boxSizing: "border-box",
           [`& .MuiDrawer-paper`]: {
-            width: isDesktop ? "20%" : "40%",
+            width: isDesktop ? "20%" : isMobile ? "75%" : "40%",
             boxSizing: "border-box",
           },
         }}
