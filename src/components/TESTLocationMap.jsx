@@ -21,7 +21,7 @@
 //   // const { isLoaded } = false;
 //   const { isLoaded } = useJsApiLoader({
 //     id: "google-map-script",
-//     googleMapsApiKey: "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo",
+//     googleMapsApiKey: "",
 //     libraries,
 //   });
 

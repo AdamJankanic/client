@@ -9,6 +9,7 @@ import {
 
 import Modal from "@mui/material/Modal";
 import { Box } from "@mui/material";
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 export function LocationMap(props) {
   const [map, setMap] = React.useState(null);
@@ -22,9 +23,10 @@ export function LocationMap(props) {
     lng: 40.5038,
   };
   // const { isLoaded } = false;
+  console.log(GOOGLE_MAPS_API_KEY);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
@@ -78,4 +80,3 @@ export function LocationMap(props) {
     <></>
   );
 }
-// Compare this snippet from src\components\Navbar.jsx:

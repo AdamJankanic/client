@@ -14,6 +14,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { LocationMap } from "./LocationMap";
 import axiosConfig from "../axiosConfig";
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 export function Event(props) {
   const [modal, setModal] = React.useState(false);
@@ -52,13 +53,14 @@ export function Event(props) {
   const [libraries] = React.useState(["places"]);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
   async function sendLocation() {
     if (modal) return;
     console.log("sendLocation");
+
     if (event.location === "" || userLocation === "") {
       alert("You are not sharing your location");
       return;

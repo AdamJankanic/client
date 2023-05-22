@@ -12,7 +12,8 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import { useMediaQuery } from "@mui/material";
 // This key was created specifically for the demo in mui.com.
 // You need to create a new one for your application.
-const GOOGLE_MAPS_API_KEY = "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo";
+
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 function loadScript(src, position, id) {
   if (!position) {
@@ -49,7 +50,7 @@ export function LocationAutocomplete({ handleSetLocation }) {
   const [libraries] = React.useState(["places"]);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCleldzdzfKKy_s-Jk9S56UxxX6dwxvxpo",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
