@@ -21,9 +21,10 @@ import { EventProfile } from "../components/EventProfile";
 import { EventJoined } from "../components/EventJoined";
 import { OfferProfile } from "../components/OfferProfile";
 import { OfferContacted } from "../components/OfferContacted";
+import { ChangeName } from "../components/ChangeName.jsx";
 
 import MenuIcon from "@mui/icons-material/Menu";
-
+import EditIcon from "@mui/icons-material/Edit";
 const activeDesign = {
   width: "90%",
   color: "white",
@@ -94,6 +95,13 @@ export function Profile() {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const [modal, setModal] = React.useState(false);
+  const handleClose = () => {
+    console.log("handleCloseeeeeeeeeeeeeeeeee");
+    setModal(false);
+    return false;
+  };
 
   if (!user) {
     window.location.href = "/signin";
@@ -172,6 +180,12 @@ export function Profile() {
   const joinedEvents = selector.eventsStore.joinedEvents;
   const offers = selector.offersStore.myOffers;
   const contactedOffers = selector.offersStore.contactedOffers;
+
+  function handleNameChange() {
+    if (modal) return;
+    console.log("change name");
+    setModal(true);
+  }
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 1040px)");
@@ -345,6 +359,7 @@ export function Profile() {
             >
               <Typography sx={profileText}>Username:</Typography>
               <Typography sx={profileValue}>{user.username}</Typography>
+              {/* <EditIcon onClick={handleNameChange}></EditIcon> */}
             </Box>
             <Box
               sx={{
@@ -378,7 +393,8 @@ export function Profile() {
               </Typography>
             </Box>
           </Box>
-          <Button
+
+          {/* <Button
             variant="contained"
             sx={{
               width: "50%",
@@ -399,7 +415,7 @@ export function Profile() {
             }}
           >
             Edit profile
-          </Button>
+          </Button> */}
         </Box>
         <Box
           sx={{
@@ -467,6 +483,7 @@ export function Profile() {
           </Grid>
         </Box>
       </Box>
+      <ChangeName open={modal} onClose={handleClose} />
     </Box>
   );
 }

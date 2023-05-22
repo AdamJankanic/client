@@ -17,6 +17,10 @@ export function Verification() {
         console.log("good ", response);
         if (response.status === 200) {
           alert("Verification successful");
+
+          const user = JSON.parse(localStorage.getItem("user"));
+          user.verified = true;
+          localStorage.setItem("user", JSON.stringify(user));
           window.location.href = "/";
         }
       })
